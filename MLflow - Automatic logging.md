@@ -10,6 +10,10 @@
 다음이 사전에 준비 되어 있어야 한다.
 
 ```bash
+# 파이썬 버전 확인
+$ python --version
+Python 3.8.7
+
 # mlflow 설치 & 버전 확인
 $ pip install mlflow
 $ mlflow --version
