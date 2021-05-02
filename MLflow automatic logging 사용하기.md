@@ -120,7 +120,7 @@ $ tree mlruns/
 ![image-20210501143223451](images/image-20210501143223451.png)
 
 `8f93587bcd384c198daee5aaef6f5c4b`  디렉토리에 각종 내용들이 로깅된 파일들이 있는 것을 볼 수 있다.  
-실제 어떤 값들이 들어가있는지 쉽게 보기위해 yatai 웹서버로 접속해서 봐보자.
+실제 어떤 값들이 들어가있는지 쉽게 보기위해 웹서버로 접속해서 봐보자.
 
 ```bash
 $ mlflow ui
@@ -261,13 +261,13 @@ $ python sklearn_autolog/grid_search_cv.py
 
 ![image-20210501151749642](images/image-20210501151749642.png)
 
-그렇다면 yatai 에서는 어떻게 보여줄까?  
-yatai에서도 `child run` 들을 `parent run` 들과 구분 없이 보여줄까?  
-이를 확인하기 위해 yatai 서버로 접속해서 확인해보자.
+그렇다면 웹서버에서는 어떻게 보여줄까?  
+웹서버에서도 `child run` 들을 `parent run` 들과 구분 없이 보여줄까?  
+이를 확인하기 위해 웹서버에 접속해서 확인해보자.
 
 ![image-20210501152033250](images/image-20210501152033250.png)
 
-재밌게도 yatai 에서는 `parent run` 만 보인다.  
+재밌게도 웹서버에서는 `parent run` 만 보인다.  
 `grid_search_cv.py` 가 있는 행에 `+` 버튼을 눌러보면 아래와 같이 `child runs` 가 나온다.
 
 ![image-20210501152156812](images/image-20210501152156812.png)
@@ -296,6 +296,6 @@ yatai에서도 `child run` 들을 `parent run` 들과 구분 없이 보여줄까
     - `child run` 은 `GridSearch` 에 사용되는 파라미터 별로 실행한다.
     - `parent run` 은 `child run` 중 가장 최적화된 파라미터를 가지고 실행한다.
     - `parent run` 만 `artifacts` 를 기록한다.
-    - yatai 에서도 `parent` - `child` 구조를 확인할 수 있다.
+        - 웹서버에서도 `parent` - `child` 구조를 확인할 수 있다.
 
 이전 글에서 모델러가 로깅을 위해 `mlflow` 를 알고 써야하는 의존성에 대해서 걱정했었는데, 자동 로깅 기능을 사용하면 이러한 걱정이 좀 많이 내려가지 않을까 싶다. 
