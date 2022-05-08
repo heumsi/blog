@@ -8,7 +8,6 @@
 
 body {
   font-size: 1rem;
-  font-size: 100%;
   color: #333333;
 }
 
@@ -74,11 +73,12 @@ p {
 }
 
 .content {
-  line-height: 2.2rem;
+  line-height: 2.2em;
 }
 
 .content .page-title {
   margin-top: 1em;
+  line-height: 1.2em;
 }
 
 .content .post-date {
@@ -89,6 +89,7 @@ p {
 
 .content h2, h3, h4 {
   margin-top: 2em;
+  line-height: 1.2em;
 }
 
 .content p {
@@ -117,4 +118,14 @@ p {
   margin: 6em 0 3em 0;
   font-size: 1em;
   text-align: right;
+}
+
+@media screen and (max-width: 800px) {
+  body {
+    font-size: 0.85rem;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
 }
