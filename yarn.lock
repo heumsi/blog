@@ -8639,6 +8639,11 @@
   "resolved" "https://registry.npmjs.org/minimist/-/minimist-1.2.6.tgz"
   "version" "1.2.6"
 
+"minireset.css@^0.0.7":
+  "integrity" "sha512-raWKK2aHP/MI4Yu72dU6hade1YFuoyDQtSUi/FiIZfeRHjgL81uN/nFvG2aoAr+mseRc3jpg47jQqx1/+6w+kQ=="
+  "resolved" "https://registry.npmjs.org/minireset.css/-/minireset.css-0.0.7.tgz"
+  "version" "0.0.7"
+
 "mitt@^1.2.0":
   "integrity" "sha512-r6lj77KlwqLhIUku9UWYes7KJtsczvolZkzp8hbaDPPaE24OmWl5s539Mytlj22siEQKosZ26qCBgda2PKwoJw=="
   "resolved" "https://registry.npmjs.org/mitt/-/mitt-1.2.0.tgz"

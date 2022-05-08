@@ -6,7 +6,7 @@ import Layout from '../../components/layout'
 const BlogPost = ({ data }) => {
   return (
     <Layout pageTitle={data.mdx.frontmatter.title}>
-      <p>{data.mdx.frontmatter.date}</p>
+      <span class="post-date">{data.mdx.frontmatter.date}</span>
       <MDXRenderer>
         {data.mdx.body}
       </MDXRenderer>
@@ -20,7 +20,7 @@ export const query = graphql`
     mdx(id: {eq: $id}) {
       frontmatter {
         title
-        date(formatString: "MMMM D, YYYY")
+        date(formatString: "YYYY년 M월 D일")
       }
       body
     }

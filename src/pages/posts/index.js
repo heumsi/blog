@@ -4,16 +4,16 @@ import Layout from '../../components/layout'
 
 const BlogPage = ({ data }) => {
   return (
-    <Layout pageTitle="My Blog Posts">
+    <Layout pageTitle="Posts">
       {
         data.allMdx.nodes.map((node) => (
           <article key={node.id}>
-            <h2>
+            <h2 class="post-item-title">
               <Link to={`/posts/${node.slug}`}>
                 {node.frontmatter.title}
               </Link>
             </h2>
-            <p>Posted: {node.frontmatter.date}</p>
+            <p class="post-item-date">{node.frontmatter.date}</p>
           </article>
         ))
       }
@@ -26,7 +26,7 @@ export const query = graphql`
     allMdx(sort: {fields: frontmatter___date, order: DESC}) {
       nodes {
         frontmatter {
-          date(formatString: "MMMM D, YYYY")
+          date(formatString: "YYYY년 M월 D일")
           title
         }
         id
