@@ -4,6 +4,13 @@ module.exports = {
     siteUrl: `https://heumsi.github.io`,
   },
   plugins: [
+    {
+      resolve: `gatsby-plugin-gtag`,
+      options: {
+        trackingId: `G-J27HTD6P31`,
+        head: true,
+      },
+    },
     'gatsby-plugin-sharp',
     {
       resolve: `gatsby-source-filesystem`,

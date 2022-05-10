@@ -5924,6 +5924,11 @@
     "@parcel/transformer-raw" "^2.3.2"
     "@parcel/transformer-react-refresh-wrap" "^2.3.2"
 
+"gatsby-plugin-gtag@^1.0.13":
+  "integrity" "sha512-Oul6O67klajrEjkkF1diD228SmyUWsAwTq/1tYq41vBwmyNiPk4dhk8K93rrNQ5d5zesSv+awBeGBa503tQqGw=="
+  "resolved" "https://registry.npmjs.org/gatsby-plugin-gtag/-/gatsby-plugin-gtag-1.0.13.tgz"
+  "version" "1.0.13"
+
 "gatsby-plugin-mdx@^3.13.0":
   "integrity" "sha512-becJF14ChRlkQkeYOR7GzuDNCK0yqax5/BkDHo3pNorh5arxe2jMZm7Kvru8CQa+R9fSHZQY16IEivT9/08QOQ=="
   "resolved" "https://registry.npmjs.org/gatsby-plugin-mdx/-/gatsby-plugin-mdx-3.13.0.tgz"
@@ -6166,7 +6171,7 @@
     "@babel/core" "^7.15.5"
     "@babel/runtime" "^7.15.4"
 
-"gatsby@^4.0.0-next", "gatsby@^4.13.1":
+"gatsby@^4.0.0-next", "gatsby@^4.13.1", "gatsby@>2.0.0-alpha":
   "integrity" "sha512-RLHPyjF7fdMqoq77kE6O/XLVA8ccRd3CrzncHQ/JhtI8+ZvyUN8gzdVfcLcXDd2KIBQvMH7VivEiPWWZPlWuzw=="
   "resolved" "https://registry.npmjs.org/gatsby/-/gatsby-4.13.1.tgz"
   "version" "4.13.1"
