@@ -1,16 +1,14 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
-import { MDXRenderer } from 'gatsby-plugin-mdx'
-import Layout from '../../components/layout'
+import Post from '../../components/templates/post'
 
 const BlogPost = ({ data }) => {
   return (
-    <Layout pageTitle={data.mdx.frontmatter.title}>
-      <span class="post-date">{data.mdx.frontmatter.date}</span>
-      <MDXRenderer>
-        {data.mdx.body}
-      </MDXRenderer>
-    </Layout>
+    <Post 
+      title={data.mdx.frontmatter.title}
+      date={data.mdx.frontmatter.date} 
+      content={data.mdx.body}
+    />
   )
 }
 
