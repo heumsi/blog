@@ -12,6 +12,14 @@ module.exports = {
         head: true,
       },
     },
+    {
+      resolve: 'gatsby-plugin-robots-txt',
+      options: {
+        host: 'https://heumsi.github.io',
+        sitemap: 'https://heumsi.github.io/sitemap.xml',
+        policy: [{ userAgent: '*', allow: '/' }],
+      },
+    },
     'gatsby-plugin-sharp',
     {
       resolve: `gatsby-source-filesystem`,
