@@ -1,6 +1,8 @@
 module.exports = {
   siteMetadata: {
     title: "하나씩 점을 찍어 나가며",
+    author: 'Heumsi',
+    description: '소프트웨어 엔지니어 Heumsi의 블로그 입니다.',
     siteUrl: `https://heumsi.github.io`,
   },
   plugins: [
