@@ -4,6 +4,7 @@ module.exports = {
     siteUrl: `https://heumsi.github.io`,
   },
   plugins: [
+    'gatsby-plugin-advanced-sitemap',
     {
       resolve: `gatsby-plugin-gtag`,
       options: {
