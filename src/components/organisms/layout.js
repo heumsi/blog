@@ -3,7 +3,7 @@ import Header from "../atoms/header"
 import Nav from "../atoms/nav"
 import Content from '../atoms/content'
 import Footer from '../atoms/footer'
-import "./layout.css"
+import "../styles/main.css"
 
 
 
