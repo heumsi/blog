@@ -131,7 +131,7 @@ p {
 
 .content .gatsby-resp-image-wrapper + em {
   display: block;
-  margin: -1.8em auto 2em auto;
+  margin: -1.5em auto 2em auto;
   max-width: 90%;
   text-align: center;
   font-size: 0.9em;
