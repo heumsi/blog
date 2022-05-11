@@ -92,6 +92,10 @@ module.exports = {
     },
     {
       resolve: `gatsby-plugin-mdx`,
+      plugins: [
+        `gatsby-remark-images`,
+        `gatsby-remark-images-medium-zoom`
+      ],
       options: {
         extensions: [`.mdx`, `.md`],
         gatsbyRemarkPlugins: [
@@ -161,7 +165,14 @@ module.exports = {
             },
           },
           `gatsby-remark-autolink-headers`,
-          `gatsby-remark-images`,
+          {
+            resolve: `gatsby-remark-images`,
+            options: {
+              maxWidth: 590,
+              linkImagesToOriginal: false // Important!
+            }
+          },
+          `gatsby-remark-images-medium-zoom`, // Important!
         ],
       },
     },
