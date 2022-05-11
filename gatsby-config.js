@@ -7,8 +7,14 @@ module.exports = {
   },
   plugins: [
     'gatsby-plugin-advanced-sitemap',
-    // ref: https://dantechblog.gatsbyjs.io/posts/google-search-console/
     {
+      resolve: `gatsby-plugin-disqus`,
+      options: {
+        shortname: `heumsi-github-io`
+      }
+    },
+    {
+      // ref: https://dantechblog.gatsbyjs.io/posts/google-search-console/
       resolve: `gatsby-plugin-feed`,
       options: {
         query: `
