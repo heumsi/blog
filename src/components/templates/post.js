@@ -22,7 +22,28 @@ const Post = ({ url, id, title, date, content }) => {
       headingSelector: 'h2, h3',
       hasInnerContainers: true,
     });
-    return () => tocbot.destroy()
+
+    window.addEventListener("scroll", () => {
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      let scrollBottom =  scrollTop + window.innerHeight
+      let contentOffsetTop = document.getElementsByClassName("post-content")[0].offsetTop
+      let contentOffsetBottom = contentOffsetTop + document.getElementsByClassName("post-content")[0].offsetHeight
+
+      // for debug
+      // console.log(`(${scrollTop}, ${scrollBottom}), (${contentOffsetTop}, ${contentOffsetBottom})`);
+    
+      if ((scrollTop < contentOffsetTop) || (scrollBottom >= contentOffsetBottom)) {
+        document.getElementsByClassName('toc')[0].classList.add("toc-hidden")
+      }
+      else if (scrollTop >= contentOffsetTop) {
+        document.getElementsByClassName('toc')[0].classList.remove("toc-hidden")
+      }
+    });
+
+
+    return () => {
+      tocbot.destroy()
+    }
   },[])
   
   return (
