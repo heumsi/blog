@@ -12,7 +12,7 @@ const Post = ({ url, id, title, date, content }) => {
 
   return (
     <Layout>
-      <h1 className="page-title">{title}</h1>
+      <h1 className="post-title">{title}</h1>
       <span className="post-date">{date}</span>
       <MDXRenderer>
         {content}
