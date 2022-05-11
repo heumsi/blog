@@ -117,16 +117,16 @@ p {
   line-height: 1.2em;
 }
 
-.content .post-meta {
-  display: block;
-  margin-top: 1rem;
-  color: #666666;
-}
-
-.post-sub-title {
-  margin-top: 1rem;
+.content .post-sub-title {
+  margin-top: 0.5rem;
   color: #666666;
   font-weight: 400;
+}
+
+.content .post-meta {
+  display: block;
+  margin-top: 0.5rem;
+  color: #666666;
 }
 
 .content .post-content {
