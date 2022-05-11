@@ -5,7 +5,7 @@ import * as tocbot from 'tocbot'
 import Layout from '../organisms/layout'
 
 
-const Post = ({ url, id, title, date, content }) => {
+const Post = ({ url, id, title, subTitle, date, content }) => {
   const disqusConfig = {
     url: url,
     identifier: id,
@@ -50,6 +50,7 @@ const Post = ({ url, id, title, date, content }) => {
   return (
     <Layout>
       <h1 className="post-title">{title}</h1>
+      <h3 className="post-sub-title">{subTitle}</h3>
       <span className="post-date">{date}</span>
       <div className='toc toc-hidden'></div>
       <div className='post-content'>

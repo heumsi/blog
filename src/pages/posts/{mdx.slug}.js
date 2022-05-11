@@ -8,6 +8,7 @@ const PostPage = ({ data }) => {
       url={data.site.siteMetadata.siteUrl + "/posts/" + data.mdx.slug}
       id={data.mdx.id}
       title={data.mdx.frontmatter.title}
+      subTitle={data.mdx.frontmatter.subTitle}
       date={data.mdx.frontmatter.date} 
       content={data.mdx.body}
     />
@@ -21,6 +22,7 @@ export const query = graphql`
       id
       frontmatter {
         title
+        subTitle
         date(formatString: "YYYY년 M월 D일")
       }
       body

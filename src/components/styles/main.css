@@ -46,7 +46,7 @@ p {
 .site-title {
   font-size: 1.5rem;
   font-weight: 400;
-  margin: 2.5rem 0;
+  margin: 2.5rem 0 1.5rem 0;
 }
 
 .nav {
@@ -75,6 +75,7 @@ p {
 }
 
 .content {
+  margin-top: 4rem;
   line-height: 2.2em;
 }
 
@@ -83,19 +84,32 @@ p {
   line-height: 1.2em;
 }
 
+.post-sub-title {
+  margin-top: 1rem;
+  color: #666666;
+  font-weight: 400;
+}
+
 .content .post-item-title {
   font-size: 1.5rem;
   font-weight: 400;
 }
 
+.content .post-item-sub-title {
+  margin-top: 1rem;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #666666
+}
+
 .content .post-date {
   display: block;
-  margin: 1rem 0 2rem 0;
+  margin-top: 1rem;
   color: #666666;
 }
 
 .content .post-content {
-  margin-bottom: 5rem;
+  margin: 3rem 0 5rem 0;
 }
 
 .content h2, h3, h4 {
