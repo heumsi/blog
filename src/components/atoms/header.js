@@ -13,7 +13,7 @@ const Header = () => {
   `)
   
   return (
-    <header class="site-title">
+    <header className="site-title">
       {data.site.siteMetadata.title}
     </header>
   )

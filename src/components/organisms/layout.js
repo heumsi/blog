@@ -9,7 +9,7 @@ import "./layout.css"
 
 const Layout = ({ children }) => {
   return (
-    <div class="container">
+    <div className="container">
       <Header/>
       <Nav />
       <Content>

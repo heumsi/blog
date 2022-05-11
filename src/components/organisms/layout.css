@@ -87,6 +87,10 @@ p {
   color: #666666;
 }
 
+.content .post-content {
+  margin-bottom: 5rem;
+}
+
 .content h2, h3, h4 {
   margin-top: 2em;
   line-height: 1.2em;
