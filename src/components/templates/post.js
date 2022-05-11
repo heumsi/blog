@@ -50,7 +50,7 @@ const Post = ({ url, id, title, date, content }) => {
     <Layout>
       <h1 className="post-title">{title}</h1>
       <span className="post-date">{date}</span>
-      <div className='toc'></div>
+      <div className='toc toc-hidden'></div>
       <div className='post-content'>
         <MDXRenderer>
           {content}
