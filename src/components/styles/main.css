@@ -69,7 +69,7 @@ p {
   color: #333333;
 }
 
-.post-item-date {
+.post-item-meta {
   font-size: 1em;
   color: #666666;
 }
@@ -102,7 +102,7 @@ p {
   color: #666666
 }
 
-.content .post-date {
+.content .post-meta {
   display: block;
   margin-top: 1rem;
   color: #666666;

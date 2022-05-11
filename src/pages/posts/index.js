@@ -16,7 +16,19 @@ const BlogPage = ({ data }) => {
             <h3 className="post-item-sub-title">
               {node.frontmatter.subTitle}
             </h3>
-            <p className="post-item-date">{node.frontmatter.date}</p>
+            <p className="post-item-meta">
+              <span>{node.frontmatter.date}</span>&nbsp;—&nbsp;  
+              <span>
+                {
+                  node.frontmatter.tags.map((tag, index) => (
+                    <>
+                      {tag}
+                      {index < node.frontmatter.tags.length - 1 ? ', ' : ''}
+                    </>
+                  ))
+                }
+              </span>
+            </p>
           </article>
         ))
       }
@@ -32,6 +44,7 @@ export const query = graphql`
           date(formatString: "YYYY년 M월 D일")
           title
           subTitle
+          tags
         }
         id
         body

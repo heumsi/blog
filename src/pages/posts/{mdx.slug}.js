@@ -9,7 +9,8 @@ const PostPage = ({ data }) => {
       id={data.mdx.id}
       title={data.mdx.frontmatter.title}
       subTitle={data.mdx.frontmatter.subTitle}
-      date={data.mdx.frontmatter.date} 
+      date={data.mdx.frontmatter.date}
+      tags={data.mdx.frontmatter.tags}
       content={data.mdx.body}
     />
   )
@@ -24,6 +25,7 @@ export const query = graphql`
         title
         subTitle
         date(formatString: "YYYY년 M월 D일")
+        tags
       }
       body
       slug
