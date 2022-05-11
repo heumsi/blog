@@ -20,6 +20,7 @@ const Post = ({ url, id, title, date, content }) => {
       tocSelector: '.toc',
       contentSelector: '.post-content',
       headingSelector: 'h2, h3',
+      collapseDepth: 6,
       hasInnerContainers: true,
     });
 
