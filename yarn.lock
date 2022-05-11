@@ -12036,6 +12036,11 @@
     "regex-not" "^1.0.2"
     "safe-regex" "^1.1.0"
 
+"tocbot@^4.18.2":
+  "integrity" "sha512-bWUfEYQZ4oFgT+qZYvzlTgbsTmA645ApHbo1iRaOBUeFfy5IpctgAQQjCXbPZy+4RDZ1JJYlIBgoApZMzMaYog=="
+  "resolved" "https://registry.npmjs.org/tocbot/-/tocbot-4.18.2.tgz"
+  "version" "4.18.2"
+
 "toidentifier@1.0.0":
   "integrity" "sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw=="
   "resolved" "https://registry.npmjs.org/toidentifier/-/toidentifier-1.0.0.tgz"

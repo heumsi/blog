@@ -1,5 +1,6 @@
 @import url("minireset.css");
 @import url("prism-one-light.css");
+@import url('tocbot.css');
 
 * {
   text-decoration: none;
