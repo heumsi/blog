@@ -63,10 +63,12 @@ p {
 .nav-link-item a{
   padding-right: 2rem;
   color: #666666;
+  opacity: 0.8;
+  transition: 0.25s;
 }
 
 .nav-link-item a:hover {
-  color: #333333;
+  opacity: 1;
 }
 
 .content {
@@ -78,6 +80,13 @@ p {
   margin: 2rem 0;
   display: flex;
   align-items: center;
+  color: #333333;
+  opacity: 0.8;
+  transition: 0.2s;
+}
+
+.content .post-item:hover {
+  opacity: 1;
 }
 
 .content .post-item-thumbnail {
@@ -102,13 +111,11 @@ p {
   margin-top: 0.5rem;
   font-size: 1rem;
   font-weight: 400;
-  color: #666666
 }
 
 .content .post-item-meta {
   font-size: 1em;
   line-height: 1em;
-  color: #666666;
   margin: auto 0 0 0;
 }
 

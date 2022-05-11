@@ -8,6 +8,7 @@ const BlogPage = ({ data }) => {
     <Page title="Posts">
       {
         data.allMdx.nodes.map((node) => (
+          <Link to={`/posts/${node.slug}`}>
           <article key={node.id} className="post-item">
             <Img
               fixed={node.frontmatter.thumbnail.childImageSharp.fixed}
@@ -15,9 +16,9 @@ const BlogPage = ({ data }) => {
             />
             <div class="post-item-desc">
               <h2 className="post-item-title">
-                <Link to={`/posts/${node.slug}`}>
+                
                   {node.frontmatter.title}
-                </Link>
+                
               </h2>
               <h3 className="post-item-sub-title">
                 {node.frontmatter.subTitle}
@@ -37,6 +38,7 @@ const BlogPage = ({ data }) => {
               </div>
             </div>
           </article>
+          </Link>
         ))
       }
     </Page>
