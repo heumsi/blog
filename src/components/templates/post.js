@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import { MDXRenderer } from 'gatsby-plugin-mdx'
 import { Disqus } from 'gatsby-plugin-disqus'
 import * as tocbot from 'tocbot'
+import { GatsbySeo } from 'gatsby-plugin-next-seo';
 import Layout from '../organisms/layout'
 
 
@@ -49,6 +50,11 @@ const Post = ({ url, id, title, subTitle, date, tags, content }) => {
   
   return (
     <Layout>
+      <GatsbySeo
+        title={title}
+        description={subTitle}
+        canonical={url}
+      />
       <h1 className="post-title">{title}</h1>
       <h3 className="post-sub-title">{subTitle}</h3>
       <p className='post-meta'>
