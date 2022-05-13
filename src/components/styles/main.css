@@ -29,7 +29,7 @@ h4 {
   font-size: 1.25em;  
   font-weight: 700;
 }
-p { 
+p, li { 
   font-size: 1em;
   font-weight: 400;
   line-height: 1.8em;
@@ -184,7 +184,23 @@ p {
     font-size: 0.85rem;
   }
 
+  p, li {
+    font-size: 1.25em;
+  }
+
   .container {
     padding: 0 1rem;
+  }
+
+  .content .post-item-thumbnail {
+    display: none !important;
+  }
+
+  .content .post-item-desc {
+    margin-left: 0;
+  }
+
+  .content .post-item-title {
+    font-size: 1.3rem;
   }
 }
