@@ -153,6 +153,10 @@ p {
   text-decoration: underline;
 }
 
+.content ul li {
+  list-style:inside;
+}
+
 .content .gatsby-resp-image-wrapper {
   margin: 2em 0;
 }
