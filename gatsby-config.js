@@ -1,9 +1,10 @@
 module.exports = {
+  pathPrefix: `/blog`,
   siteMetadata: {
     title: "하나씩 점을 찍어 나가며",
     author: 'Heumsi',
     description: '소프트웨어 엔지니어 Heumsi의 블로그 입니다.',
-    siteUrl: `https://heumsi.github.io`,
+    siteUrl: `https://heumsi.github.io/blog`,
   },
   plugins: [
     'gatsby-plugin-next-seo',
@@ -78,8 +79,8 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-robots-txt',
       options: {
-        host: 'https://heumsi.github.io',
-        sitemap: 'https://heumsi.github.io/sitemap.xml',
+        host: 'https://heumsi.github.io/blog',
+        sitemap: 'https://heumsi.github.io/blog/sitemap.xml',
         policy: [{ userAgent: '*', allow: '/' }],
       },
     },
