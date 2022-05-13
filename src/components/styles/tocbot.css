@@ -10,13 +10,15 @@
   position: fixed;
   top: 50vh;
   transform: translate(0, -50%);
-  line-height: 100%;
-  color: black;
-  font-weight: 300;
-  font-size: 0.8em;
   visibility: visible;
   transition: all 0.4s cubic-bezier(0.25, 0.8, 0.4, 0.95);
+  color: #333333;
+  font-size: 0.8em;
   line-height: 1.8em;
+}
+
+.toc-list-item {
+  font-weight: 300;
 }
 
 .is-active-link {
