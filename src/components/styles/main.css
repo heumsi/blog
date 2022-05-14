@@ -50,7 +50,6 @@ p, li {
 }
 
 .nav {
-  margin-bottom: 1rem;
   font-weight: 400;
   display: flex;
 }
@@ -60,7 +59,7 @@ p, li {
 }
 
 .nav a{
-  padding-right: 2rem;
+  
   color: #666666;
   opacity: 0.8;
   transition: 0.25s;
@@ -71,14 +70,21 @@ p, li {
   opacity: 1;
 }
 
+.nav-links a {
+  padding-right: 2rem;
+}
+
 .external-links {
   margin-left: auto;
   display: flex
 }
 
+.external-links a {
+  padding-left: 2rem;
+}
+
 .content {
   margin-top: 4rem;
-  line-height: 2.2em;
 }
 
 .content .post-item {
@@ -108,7 +114,7 @@ p, li {
 
 .content .post-item-title {
   margin-top: 0;
-  font-size: 1.5rem;
+  font-size: 1.5em;
   font-weight: 400;
 }
 
@@ -116,6 +122,7 @@ p, li {
   margin-top: 0.5rem;
   font-size: 1rem;
   font-weight: 400;
+  line-height: 1.2em;
 }
 
 .content .post-item-meta {
@@ -126,11 +133,10 @@ p, li {
 
 .content .page-title, .post-title {
   margin-top: 1em;
-  line-height: 1.2em;
 }
 
 .content .post-sub-title {
-  margin-top: 0.5rem;
+  margin-top: 1rem;
   color: #666666;
   font-weight: 400;
 }
@@ -147,7 +153,6 @@ p, li {
 
 .content h2, h3, h4 {
   margin-top: 2em;
-  line-height: 1.2em;
 }
 
 .content p {
@@ -187,6 +192,7 @@ p, li {
 @media screen and (max-width: 800px) {
   body {
     font-size: 0.85rem;
+    line-height: 2.2em;
   }
 
   p, li {
@@ -197,15 +203,19 @@ p, li {
     padding: 0 1rem;
   }
 
+  .nav-links a {
+    padding-right: 1.5rem;
+  }
+
+  .external-links a {
+    padding-left: 1.5rem;
+  }
+
   .content .post-item-thumbnail {
     display: none !important;
   }
 
   .content .post-item-desc {
     margin-left: 0;
-  }
-
-  .content .post-item-title {
-    font-size: 1.3rem;
   }
 }
