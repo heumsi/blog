@@ -52,23 +52,28 @@ p, li {
 .nav {
   margin-bottom: 1rem;
   font-weight: 400;
+  display: flex;
 }
 
 .nav-links {
   display: flex;
-  list-style: none;
-  margin-bottom: 1rem;
 }
 
-.nav-link-item a{
+.nav a{
   padding-right: 2rem;
   color: #666666;
   opacity: 0.8;
   transition: 0.25s;
+  cursor: pointer;
 }
 
-.nav-link-item a:hover {
+.nav a:hover {
   opacity: 1;
+}
+
+.external-links {
+  margin-left: auto;
+  display: flex
 }
 
 .content {
