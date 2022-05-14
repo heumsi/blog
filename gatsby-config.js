@@ -92,7 +92,7 @@ module.exports = {
       resolve: 'gatsby-plugin-robots-txt',
       options: {
         host: 'https://heumsi.github.io/blog',
-        sitemap: 'https://heumsi.github.io/blog/sitemap.xml',
+        sitemap: 'https://heumsi.github.io/blog/sitemap/sitemap-index.xml',
         policy: [{ userAgent: '*', allow: '/' }],
       },
     },
