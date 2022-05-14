@@ -9,34 +9,18 @@ module.exports = {
   plugins: [
     'gatsby-plugin-next-seo',
     {
-      resolve: `gatsby-plugin-advanced-sitemap`,
+      resolve: `gatsby-plugin-sitemap`,
       options: {
-        // mapping: {
-        //   allGhostPost: {
-        //     prefix: `blog/`
-        //   }
-        // },
-        // additionalSitemaps: [ // optional: add additional sitemaps, which are e. g. generated somewhere else, but need to be indexed for this domain
-        // {
-        //     name: `my-other-posts`,
-        //     url: `/blog/sitemap-posts.xml`,
-        },
-        additionalSitemaps: [
-          {
-              url: `https://ghost.org/blog/sitemap-pages.xml`,
-          },
-          {
-              url: `https://ghost.org/blog/sitemap-posts.xml`,
-          },
-          {
-              url: `https://ghost.org/blog/sitemap-authors.xml`,
-          },
-          {
-              url: `https://ghost.org/blog/sitemap-tags.xml`,
-          },
-      ],
+        exclude: [
+          `/dev-404-page`,
+          `/404`,
+          `/404.html`,
+        ],
+        createLinkInHead: true,
+        sitemapSize: Infinity,
+        resolveSiteUrl: (data) => data.site.siteMetadata.siteUrl,
+      }
     },
-    // `gatsby-plugin-sitemap`,
     {
       resolve: `gatsby-plugin-disqus`,
       options: {
