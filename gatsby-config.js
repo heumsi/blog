@@ -21,6 +21,20 @@ module.exports = {
         //     name: `my-other-posts`,
         //     url: `/blog/sitemap-posts.xml`,
         },
+        additionalSitemaps: [
+          {
+              url: `https://ghost.org/blog/sitemap-pages.xml`,
+          },
+          {
+              url: `https://ghost.org/blog/sitemap-posts.xml`,
+          },
+          {
+              url: `https://ghost.org/blog/sitemap-authors.xml`,
+          },
+          {
+              url: `https://ghost.org/blog/sitemap-tags.xml`,
+          },
+      ],
     },
     // `gatsby-plugin-sitemap`,
     {
