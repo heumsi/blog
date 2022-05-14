@@ -8,7 +8,21 @@ module.exports = {
   },
   plugins: [
     'gatsby-plugin-next-seo',
-    'gatsby-plugin-advanced-sitemap',
+    {
+      resolve: `gatsby-plugin-advanced-sitemap`,
+      options: {
+        // mapping: {
+        //   allGhostPost: {
+        //     prefix: `blog/`
+        //   }
+        // },
+        // additionalSitemaps: [ // optional: add additional sitemaps, which are e. g. generated somewhere else, but need to be indexed for this domain
+        // {
+        //     name: `my-other-posts`,
+        //     url: `/blog/sitemap-posts.xml`,
+        },
+    },
+    // `gatsby-plugin-sitemap`,
     {
       resolve: `gatsby-plugin-disqus`,
       options: {
