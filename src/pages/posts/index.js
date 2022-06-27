@@ -10,10 +10,10 @@ const BlogPage = ({ data }) => {
         data.allMdx.nodes.map((node) => (
           <Link to={`/posts/${node.slug}`}>
           <article key={node.id} className="post-item">
-            <div class={"post-item-thumbnail"}>
-              { node.frontmatter.thumbnail && <GatsbyImage image={getImage(node.frontmatter.thumbnail)}></GatsbyImage> }
+            <div className={"post-item-thumbnail"}>
+              { node.frontmatter.thumbnail && <GatsbyImage image={getImage(node.frontmatter.thumbnail)} alt="썸네일 이미지"></GatsbyImage> }
             </div>
-            <div class="post-item-desc">
+            <div className="post-item-desc">
               <h2 className="post-item-title">
                   {node.frontmatter.title}
               </h2>
