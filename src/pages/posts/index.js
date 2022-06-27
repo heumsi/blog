@@ -11,7 +11,7 @@ const BlogPage = ({ data }) => {
           <Link to={`/posts/${node.slug}`}>
           <article key={node.id} className="post-item">
             <div class={"post-item-thumbnail"}>
-              <GatsbyImage image={getImage(node.frontmatter.thumbnail)}></GatsbyImage>
+              { node.frontmatter.thumbnail && <GatsbyImage image={getImage(node.frontmatter.thumbnail)}></GatsbyImage> }
             </div>
             <div class="post-item-desc">
               <h2 className="post-item-title">
