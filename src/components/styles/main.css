@@ -164,7 +164,8 @@ p, li {
 }
 
 .content ul li {
-  list-style:inside;
+  list-style: outside;
+  margin-left: 1em;
 }
 
 .content .gatsby-resp-image-wrapper {
@@ -182,6 +183,17 @@ p, li {
   color: #999999;
 }
 
+.content blockquote {
+  background: #f9f9f9;
+  border-left: 4px solid #e6e6e6;
+  padding: 1rem;
+  color: #666666
+}
+
+.content blockquote p {
+  margin: 0;
+}
+
 .footer .copy-right{
   margin: 6em 0 3em 0;
   font-size: 1em;
@@ -193,10 +205,6 @@ p, li {
   body {
     font-size: 0.85rem;
     line-height: 2.2em;
-  }
-
-  p, li {
-    font-size: 1.25em;
   }
 
   .container {
