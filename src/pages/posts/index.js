@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Link, graphql } from 'gatsby'
-import Img from 'gatsby-image'
+import { GatsbyImage, getImage } from "gatsby-plugin-image"
 import Page from '../../components/templates/page'
 
 const BlogPage = ({ data }) => {
@@ -10,15 +10,12 @@ const BlogPage = ({ data }) => {
         data.allMdx.nodes.map((node) => (
           <Link to={`/posts/${node.slug}`}>
           <article key={node.id} className="post-item">
-            <Img
-              fixed={node.frontmatter.thumbnail.childImageSharp.fixed}
-              className="post-item-thumbnail"
-            />
+            <div class={"post-item-thumbnail"}>
+              <GatsbyImage image={getImage(node.frontmatter.thumbnail)}></GatsbyImage>
+            </div>
             <div class="post-item-desc">
               <h2 className="post-item-title">
-                
                   {node.frontmatter.title}
-                
               </h2>
               <h3 className="post-item-sub-title">
                 {node.frontmatter.subTitle}
@@ -56,9 +53,12 @@ export const query = graphql`
           tags
           thumbnail {
             childImageSharp {
-              fixed(width: 400, height: 400) {
-                ...GatsbyImageSharpFixed
-              }
+              gatsbyImageData(
+                width: 200
+                height: 200
+                placeholder: BLURRED
+                formats: [AUTO, WEBP, AVIF]
+              )
             }
           }
         }
