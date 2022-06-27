@@ -114,6 +114,7 @@ module.exports = {
       options: {
         extensions: [`.mdx`, `.md`],
         gatsbyRemarkPlugins: [
+          'gatsby-remark-mermaid',
           {
             resolve: `gatsby-remark-prismjs`,
             options: {
