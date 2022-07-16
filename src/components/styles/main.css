@@ -164,6 +164,10 @@ p, li {
   text-decoration: underline;
 }
 
+.post-content > ul {
+  margin: 1em 0;
+}
+
 .content ul li {
   list-style: outside;
   margin-left: 1em;
