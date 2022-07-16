@@ -226,7 +226,7 @@ p, li {
 
 @media screen and (max-width: 800px) {
   html {
-    font-size: 0.85rem;
+    font-size: 1rem;
   }
 
   .container {
@@ -240,12 +240,17 @@ p, li {
   .external-links a {
     padding-left: 1.5rem;
   }
-
+  
   .content .post-item-thumbnail {
     display: none !important;
   }
 
   .content .post-item-desc {
     margin-left: 0;
+    height: 9rem;
+  }
+  
+  .content .post-item-meta {
+    line-height: 1.2em;
   }
 }
