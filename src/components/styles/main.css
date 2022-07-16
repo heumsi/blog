@@ -197,7 +197,11 @@ p, li {
   background: #f6f6f6;
   border-left: 4px solid #e6e6e6;
   padding: 1rem;
-  color: #666666
+  color: #666666;
+}
+
+.content blockquote code {
+  color: #666666;
 }
 
 .content blockquote p {

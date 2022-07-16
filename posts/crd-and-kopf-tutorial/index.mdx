@@ -545,7 +545,7 @@ def create(name, spec, namespace, logger, **kwargs):
 >
 > 다시 코드로 표현하면 다음과 같다.
 >
-> ```python
+> ```
 > {
 >   'annotations': {'kubectl.kubernetes.io/last-applied-configuration': '{"apiVersion":"heumsi.github.io/v1","kind":"Application","metadata":{"annotations":{},"name":"nginx","namespace":"default"},"spec":{"image":"nginx:latest","port":80,"replicas":1}}\n'},
 >   'diff': (('add', (), None, {'spec': {'image': 'nginx:latest', 'port': 80, 'replicas': 1}}),),
