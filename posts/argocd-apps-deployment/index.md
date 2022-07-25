@@ -586,6 +586,10 @@ Argo CD에서 핵심이 되는 Application 리소스와 이를 좀 더 GitOps �
 Argo CD는 이미 Kubernetes 클러스터의 De Facto CD 툴로 자리잡았는데, 앞으로는 어떻게 발전해나갈지 개인적으로 참 궁금한 도구이기도 하다.
 많은 사람들이 좀 더 Argo CD와 GitOps 스타일에 익숙해지는데 이 글이 기여했으면 좋겠다.
 
+> 이 글에서 사용한 Github Repository는 다음에서 확인할 수 있다.
+> - [heumsi/helm-charts](https://github.com/heumsi/helm-charts)
+> - [heumsi/argocd-apps](https://github.com/heumsi/argocd-apps)
+
 ## 참고한 글
 
 - https://argo-cd.readthedocs.io/en/stable/
