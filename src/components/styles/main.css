@@ -38,7 +38,9 @@ p, li {
   font-weight: 400;
   line-height: 1.8em;
 }
-
+a {
+  cursor: pointer;
+}
 
 .container {
   margin: auto;
@@ -47,35 +49,25 @@ p, li {
   font-family: sans-serif;
 }
 
-.site-title {
-  font-size: 1.5rem;
-  font-weight: 400;
+header {
   margin: 2.5rem 0 1.5rem 0;
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
 }
 
-.nav {
+header .site-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+header nav {
   font-weight: 400;
   display: flex;
 }
 
-.nav-links {
-  display: flex;
-}
-
-.nav a{
+header nav .nav-item {
   
-  color: #666666;
-  opacity: 0.8;
-  transition: 0.25s;
-  cursor: pointer;
-}
-
-.nav a:hover {
-  opacity: 1;
-}
-
-.nav-links a {
-  padding-right: 2rem;
 }
 
 .external-links {
@@ -232,9 +224,17 @@ p, li {
   .container {
     padding: 0 1rem;
   }
+  
+  header {
+    margin: 1.5rem 0 1.5rem 0;
+  }
+  
+  header .site-title {
+    font-size: 1rem;
+  }
 
-  .nav-links a {
-    padding-right: 1.5rem;
+  header nav .nav-item a {
+    padding-right: 1rem;
   }
 
   .external-links a {

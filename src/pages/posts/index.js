@@ -5,7 +5,7 @@ import Page from '../../components/templates/page'
 
 const BlogPage = ({ data }) => {
   return (
-    <Page title="Posts">
+    <Page title="글">
       {
         data.allMdx.nodes.map((node) => (
           <Link to={`/posts/${node.slug}`}>

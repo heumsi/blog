@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { useStaticQuery, graphql, Link } from 'gatsby'
+import Nav from "./nav";
 
 const Header = () => {
   const data = useStaticQuery(graphql`
@@ -13,10 +14,13 @@ const Header = () => {
   `)
   
   return (
-    <header className="site-title">
-      <Link to="/">
-      {data.site.siteMetadata.title}
-      </Link>
+    <header>
+      <div className="site-title">
+        <Link to="/">
+        {data.site.siteMetadata.title}
+        </Link>
+      </div>
+      <Nav />
     </header>
   )
 }
