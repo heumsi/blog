@@ -6,20 +6,22 @@ import Page from '../../components/templates/page'
 const BlogPage = ({ data }) => {
   return (
     <Page title="글">
+    <ul className="post-list">
       {
         data.allMdx.nodes.map((node) => (
+          <li className="post-item">
           <Link to={`/posts/${node.slug}`}>
-          <article key={node.id} className="post-item">
-            <div className={"post-item-thumbnail"}>
+          <article key={node.id}>
+            <div className="post-item-thumbnail">
               { node.frontmatter.thumbnail && <GatsbyImage image={getImage(node.frontmatter.thumbnail)} alt="썸네일 이미지"></GatsbyImage> }
             </div>
             <div className="post-item-desc">
-              <h2 className="post-item-title">
+              <h3 className="post-item-title">
                   {node.frontmatter.title}
-              </h2>
-              <h3 className="post-item-sub-title">
-                {node.frontmatter.subTitle}
               </h3>
+              <p className="post-item-sub-title">
+                {node.frontmatter.subTitle}
+              </p>
               <div className="post-item-meta">
                 <span>{node.frontmatter.date}</span>&nbsp;—&nbsp;  
                 <span>
@@ -36,8 +38,10 @@ const BlogPage = ({ data }) => {
             </div>
           </article>
           </Link>
+            </li>
         ))
       }
+    </ul>
     </Page>
   )
 }

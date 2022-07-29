@@ -57,8 +57,13 @@ header {
 }
 
 header .site-title {
-  font-size: 1.5rem;
+  margin: 0;
   font-weight: 700;
+  transition: 0.33s;
+}
+
+header .site-title:hover {
+  color: #344CB7;
 }
 
 header nav {
@@ -67,7 +72,11 @@ header nav {
 }
 
 header nav .nav-item {
-  
+  transition: 0.33s;
+}
+
+header nav .nav-item:hover {
+  color: #344CB7;
 }
 
 .external-links {
@@ -83,17 +92,27 @@ header nav .nav-item {
   margin-top: 4rem;
 }
 
+.content .page-title {
+  font-weight: 500;
+}
+
 .content .post-item {
   margin: 2rem 0;
-  display: flex;
+  list-style: none;
   align-items: center;
-  color: #333333;
-  opacity: 0.8;
-  transition: 0.2s;
+  transition: 0.33s;
 }
 
 .content .post-item:hover {
-  opacity: 1;
+  color: #344CB7;
+}
+
+.content .post-item a {
+  text-decoration: none;
+}
+
+.content .post-item article {
+  display: flex;
 }
 
 .content .post-item-thumbnail {
@@ -111,25 +130,18 @@ header nav .nav-item {
 
 .content .post-item-title {
   margin-top: 0;
-  font-size: 1.5em;
   font-weight: 400;
 }
 
 .content .post-item-sub-title {
   margin-top: 0.5rem;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.2em;
+  line-height: 1.4em;
 }
 
 .content .post-item-meta {
   font-size: 1em;
   line-height: 1em;
   margin: auto 0 0 0;
-}
-
-.content .page-title, .post-title {
-  margin-top: 1em;
 }
 
 .content .post-sub-title {
@@ -210,15 +222,33 @@ header nav .nav-item {
 }
 
 .footer .copy-right{
-  margin: 6em 0 3em 0;
-  font-size: 1em;
+  margin: 3em 0 3em 0;
+  font-size: 0.8rem;
   text-align: right;
-  color: #666666
+  color: #999999;
 }
 
 @media screen and (max-width: 800px) {
   html {
     font-size: 1rem;
+  }
+  
+  /* ref: https://www.modularscale.com/?1&em&1.15 */
+  h1 { 
+    font-size: 1.749em; 
+    font-weight: 700;
+  }
+  h2 { 
+    font-size: 1.521em;
+    font-weight: 700;
+  }
+  h3 { 
+    font-size: 1.322em;
+    font-weight: 700;
+  }
+  h4 { 
+    font-size: 1.15em;
+    font-weight: 700;
   }
 
   .container {
@@ -228,7 +258,6 @@ header nav .nav-item {
   header {
     margin: 1.5rem 0 1.5rem 0;
   }
-  
   header .site-title {
     font-size: 1rem;
   }
@@ -236,9 +265,31 @@ header nav .nav-item {
   header nav .nav-item a {
     padding-right: 1rem;
   }
-
-  .external-links a {
-    padding-left: 1.5rem;
+  
+  .content {
+    margin-top: 2rem;
+  }
+  
+  .content .post-list .post-item {
+    margin: 0 -1rem;
+    padding: 1rem;
+    border-bottom: 1px #cccccc solid;
+  }
+  
+  .content .post-list .post-item:last-child {
+    border-bottom: none;
+  }
+  
+  .content .post-list .post-item a {
+    text-decoration: none;
+  }
+  
+  .content .page-title {
+    font-size: 1rem;
+  }
+  
+  .content .post-item-title {
+    font-size: 1.2rem;
   }
   
   .content .post-item-thumbnail {
@@ -247,10 +298,14 @@ header nav .nav-item {
 
   .content .post-item-desc {
     margin-left: 0;
-    height: 9rem;
+    height: fit-content;
   }
   
   .content .post-item-meta {
-    line-height: 1.2em;
+    line-height: 1.4em;
+  }
+  
+  .footer .copy-right {
+    margin: 1rem 0;
   }
 }
