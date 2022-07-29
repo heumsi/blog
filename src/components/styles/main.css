@@ -79,15 +79,6 @@ header nav .nav-item:hover {
   color: #344CB7;
 }
 
-.external-links {
-  margin-left: auto;
-  display: flex
-}
-
-.external-links a {
-  padding-left: 2rem;
-}
-
 .content {
   margin-top: 4rem;
 }
@@ -221,7 +212,23 @@ header nav .nav-item:hover {
   margin: 0 auto;
 }
 
-.footer .copy-right{
+footer {
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+}
+
+footer .external-links li{
+  display: inline-block;
+  margin: 0 0.5rem;
+  transition: 0.33s;
+}
+
+footer .external-links li:hover{
+  color: #344CB7;
+}
+
+footer .copy-right{
   margin: 3em 0 3em 0;
   font-size: 0.8rem;
   text-align: right;
@@ -292,7 +299,7 @@ header nav .nav-item:hover {
     font-size: 1.2rem;
   }
   
-  .content .post-item-thumbnail {
+  .content .post-item-fexthumbnail {
     display: none !important;
   }
 
@@ -305,7 +312,7 @@ header nav .nav-item:hover {
     line-height: 1.4em;
   }
   
-  .footer .copy-right {
+  footer .copy-right {
     margin: 1rem 0;
   }
 }

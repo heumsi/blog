@@ -11,14 +11,6 @@ const Nav = () => {
           </Link>
         </li>
       </ul>
-      {/*<ul className='external-links'>*/}
-      {/*  <li className="nav-link-item">*/}
-      {/*    <a href='https://github.com/heumsi/' target='_blank' rel="noopener noreferrer">GitHub</a>*/}
-      {/*  </li>*/}
-      {/*  <li className="nav-link-item">*/}
-      {/*    <a href='https://www.linkedin.com/in/siheum-jeon-04222a1b3/' target='_blank' rel="noopener noreferrer">LinkedIn</a>*/}
-      {/*  </li>*/}
-      {/*</ul>*/}
     </nav>
   )
 }
