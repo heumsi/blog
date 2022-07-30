@@ -45,7 +45,7 @@ module.exports = {
         `,
         feeds: [
           {
-            title: '하나씩 점을 찍어 나가며 - Heumsi의 블로그 RSS',
+            title: '하나씩 점을 찍어나가며 - Heumsi의 블로그 RSS',
             serialize: ({ query: { site, allMdx } }) => {
               return allMdx.edges.map((edge) => {
                 return Object.assign({}, edge.node.frontmatter, {
@@ -106,6 +106,14 @@ module.exports = {
         path: `${__dirname}/posts`,
       }
     },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `logs`,
+        path: `${__dirname}/logs`,
+      }
+    },
+    `gatsby-plugin-mdx-source-name`,
     {
       resolve: `gatsby-plugin-mdx`,
       plugins: [

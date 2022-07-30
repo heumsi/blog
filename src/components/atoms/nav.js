@@ -9,6 +9,9 @@ const Nav = () => {
           <Link to="/posts" className="nav-link-text">
             글
           </Link>
+          <Link to="/logs" className="nav-link-text">
+            로그
+          </Link>
         </li>
       </ul>
     </nav>

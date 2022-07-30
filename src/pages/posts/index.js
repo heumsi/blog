@@ -48,7 +48,7 @@ const BlogPage = ({ data }) => {
 
 export const query = graphql`
   query {
-    allMdx(sort: {fields: frontmatter___date, order: DESC}) {
+    allMdx(filter: {fields: {source: {eq: "posts"}}}, sort: {fields: frontmatter___date, order: DESC}) {
       nodes {
         frontmatter {
           date(formatString: "YYYY년 M월 D일")
@@ -67,7 +67,6 @@ export const query = graphql`
           }
         }
         id
-        body
         slug
       }
     }
