@@ -3,7 +3,7 @@ import { Link, graphql } from 'gatsby'
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
 import Page from '../../components/templates/page'
 
-const BlogPage = ({ data }) => {
+const PostsPage = ({ data }) => {
   return (
     <Page title="글">
     <ul className="post-list">
@@ -73,4 +73,4 @@ export const query = graphql`
   }
 `
 
-export default BlogPage
+export default PostsPage

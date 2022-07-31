@@ -32,11 +32,11 @@ Argo CD에 대해 이미 알고있으며, 이를 좀 더 잘 사용하고 싶은
 
 Argo CD를 배포하면 다음과 같은 Web UI를 이용할 수 있다.
 
-![1.png](./1.png)
+![1.png](1.png)
 
 Argo CD를 처음 접하게 되면, 보통은 다음처럼 이 Web UI를 통해서 App을 배포하게 된다. 
 
-![2.png](./2.png)
+![2.png](2.png)
 
 쉽고 간편하다.
 
@@ -72,7 +72,7 @@ Web UI는 단순히 앱 배포 상태에 대한 Viewer의 역할만 하게된다
 
 직접 확인해보자. Argo CD Web UI에서 다음처럼 nginx를 배포한다.
 
-![3.png](./3.png)
+![3.png](3.png)
 
 그리고 Argo CD가 배포된 Namespace에서 Application 리소스를 조회해본다.
 
@@ -347,11 +347,11 @@ applications   Synced        Healthy
 nginx          Synced        Healthy
 ```
 
-![4.png](./4.png)
+![4.png](4.png)
 
 `applications` 을 클릭하면 다음처럼 `nginx` 가 `applications` 의 자식 리소스로 포함되어 있는 것도 볼 수 있다.
 
-![5.png](./5.png)
+![5.png](5.png)
 
 만약 클러스터 내에 App을 또 배포하고싶으면 어떻게 하면 될까?
 이제는 그저 `argocd-apps/templates` 내에 Application를 추가하면 된다.
@@ -401,7 +401,7 @@ nginx          Synced        Healthy
 wordpress      Synced        Progressing
 ```
 
-![6.png](./6.png)
+![6.png](6.png)
 
 > 이미 배포되어 있는 Argo CD에 대해서도 Application을 추가하여 연동할 수 있다.
 > 배포하는 방법은 위와 똑같고, 배포하면 다음처럼 application 으로 리소스가 잡힌다.
@@ -553,7 +553,7 @@ nginx       Synced        Healthy
 wordpress   OutOfSync     Progressing
 ```
 
-![7.png](./7.png)
+![7.png](7.png)
 
 ApplicationSet을 이용하면 별도로 Root Application을 두지 않게된다.
 Root Application 대신 ApplicaitonSet이 이 Application들을 계속해서 제어하기 때문이다.

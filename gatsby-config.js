@@ -11,13 +11,13 @@ module.exports = {
     {
       resolve: `gatsby-plugin-sitemap`,
       options: {
-        exclude: [
+        excludes: [
           `/dev-404-page`,
           `/404`,
           `/404.html`,
+          `/logs/`,
         ],
         createLinkInHead: true,
-        sitemapSize: Infinity,
         resolveSiteUrl: (data) => data.site.siteMetadata.siteUrl,
       }
     },
@@ -60,6 +60,7 @@ module.exports = {
             query: `
               {
                 allMdx(
+                  filter: {fields: {source: {eq: "posts"}}},
                   sort: { fields: [frontmatter___date], order: DESC }
                 ) {
                   edges {
@@ -103,14 +104,14 @@ module.exports = {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `posts`,
-        path: `${__dirname}/posts`,
+        path: `${__dirname}/content/posts`,
       }
     },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `logs`,
-        path: `${__dirname}/logs`,
+        path: `${__dirname}/content/logs`,
       }
     },
     `gatsby-plugin-mdx-source-name`,

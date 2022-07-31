@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { Link, graphql } from 'gatsby'
+import { graphql } from 'gatsby'
 import Page from '../../components/templates/page'
 import Log from "../../components/templates/log";
 
-const LogPage = ({ data }) => {
+const LogsPage = ({ data }) => {
   return (
     <Page title="로그">
     <ul className="log-list">
@@ -32,4 +32,4 @@ export const query = graphql`
   }
 `
 
-export default LogPage
+export default LogsPage

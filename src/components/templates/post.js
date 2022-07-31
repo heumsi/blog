@@ -6,7 +6,8 @@ import { GatsbySeo } from 'gatsby-plugin-next-seo';
 import Layout from '../organisms/layout'
 
 
-const Post = ({ url, id, title, subTitle, date, tags, content }) => {
+const Post = ({pageContext}) => {
+  const { url, id, title, subTitle, date, tags, content } = pageContext
   const disqusConfig = {
     url: url,
     identifier: id,
@@ -33,7 +34,7 @@ const Post = ({ url, id, title, subTitle, date, tags, content }) => {
 
       // for debug
       // console.log(`(${scrollTop}, ${scrollBottom}), (${contentOffsetTop}, ${contentOffsetBottom})`);
-    
+
       if ((scrollTop < contentOffsetTop) || (scrollBottom >= contentOffsetBottom)) {
         document.getElementsByClassName('toc')[0].classList.add("toc-hidden")
       }
