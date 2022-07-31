@@ -71,16 +71,13 @@ header nav {
   display: flex;
 }
 
-header nav .nav-item {
+header nav .nav-item a {
+  padding-right: 1.5rem;
   transition: 0.33s;
 }
 
-header nav .nav-item:hover {
+header nav .nav-item a:hover {
   color: #344CB7;
-}
-
-header nav .nav-item a {
-  padding-right: 1.5rem;
 }
 
 header nav .nav-item a:last-child {
