@@ -184,6 +184,11 @@ header nav .nav-item a:last-child {
 .content .log-content .gatsby-resp-image-wrapper {
   margin: 2em 0;
 }
+.content .log-content .gatsby-resp-image-wrapper {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  max-width: 100% !important;
+}
 
 .content .post-content .gatsby-resp-image-wrapper + em,
 .content .log-content .gatsby-resp-image-wrapper + em {
@@ -227,6 +232,8 @@ header nav .nav-item a:last-child {
 
 .content .log-list .log-item {
   margin: 2rem 0;
+  /*padding: 1rem 0;*/
+  /*border-top: #999999 0.5px solid;*/
 }
 
 .content .log-list .log-item .log-content a{
