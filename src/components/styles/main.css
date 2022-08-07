@@ -165,7 +165,8 @@ header nav .nav-item a:last-child {
   margin: 1em 0;
 }
 
-.content .post-content a {
+.content .post-content a,
+.content .log-content a{
   text-decoration: underline;
 }
 
@@ -173,16 +174,19 @@ header nav .nav-item a:last-child {
   margin: 1em 0;
 }
 
-.content .post-content ul li {
+.content .post-content ul li,
+.content .log-content ul li{
   list-style: outside;
   margin-left: 1em;
 }
 
-.content .post-content .gatsby-resp-image-wrapper {
+.content .post-content .gatsby-resp-image-wrapper,
+.content .log-content .gatsby-resp-image-wrapper {
   margin: 2em 0;
 }
 
-.content .post-content .gatsby-resp-image-wrapper + em {
+.content .post-content .gatsby-resp-image-wrapper + em,
+.content .log-content .gatsby-resp-image-wrapper + em {
   display: block;
   margin: -1.5em auto 2em auto;
   max-width: 90%;
@@ -193,7 +197,8 @@ header nav .nav-item a:last-child {
   color: #999999;
 }
 
-.content .post-content blockquote {
+.content .post-content blockquote,
+.content .log-content blockquote {
   /*background: #f9f9f9;*/
   background: #f6f6f6;
   border-left: 4px solid #e6e6e6;
@@ -201,11 +206,13 @@ header nav .nav-item a:last-child {
   color: #666666;
 }
 
-.content .post-content blockquote code {
+.content .post-content blockquote code,
+.content .log-content blockquote code {
   color: #666666;
 }
 
-.content .post-content blockquote p {
+.content .post-content blockquote p,
+.content .log-content blockquote p {
   margin: 0;
 }
 

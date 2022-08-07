@@ -21,7 +21,7 @@ const LogsPage = ({ data }) => {
 
 export const query = graphql`
   query {
-    allMdx(filter: {fields: {source: {eq: "logs"}}}, sort: {fields: frontmatter___date, order: DESC}) {
+    allMdx(filter: {fields: {source: {eq: "logs"}}}, sort: {fields: frontmatter___datetime, order: DESC}) {
       nodes {
         body
           frontmatter {
