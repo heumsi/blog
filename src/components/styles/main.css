@@ -157,6 +157,10 @@ header nav .nav-item a:last-child {
   margin: 3rem 0 5rem 0;
 }
 
+.content .log-content {
+  margin-top: 1rem;
+}
+
 .content .post-content h2, h3, h4 {
   margin-top: 2em;
 }
@@ -187,9 +191,11 @@ header nav .nav-item a:last-child {
   margin-left: 1em;
 }
 
-.content .post-content .gatsby-resp-image-wrapper,
-.content .log-content .gatsby-resp-image-wrapper {
+.content .post-content .gatsby-resp-image-wrapper {
   margin: 2em 0;
+}
+.content .log-content .gatsby-resp-image-wrapper {
+  margin: 1em 0;
 }
 .content .log-content .gatsby-resp-image-wrapper {
   margin-left: 0 !important;
@@ -241,6 +247,10 @@ header nav .nav-item a:last-child {
   margin: 2rem 0;
   /*padding: 1rem 0;*/
   /*border-top: #999999 0.5px solid;*/
+}
+
+.content .log-list .log-item .log-title {
+
 }
 
 .content .log-list .log-item .log-content a{

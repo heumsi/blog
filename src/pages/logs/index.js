@@ -10,7 +10,7 @@ const LogsPage = ({ data }) => {
       {
         data.allMdx.nodes.map((node) => (
           <li className="log-item">
-            <Log content={node.body} datetime={node.frontmatter.datetime}></Log>
+            <Log content={node.body} title={node.frontmatter.title} datetime={node.frontmatter.datetime}></Log>
           </li>
         ))
       }
@@ -24,7 +24,8 @@ export const query = graphql`
     allMdx(filter: {fields: {source: {eq: "logs"}}}, sort: {fields: frontmatter___datetime, order: DESC}) {
       nodes {
         body
-          frontmatter {
+        frontmatter {
+          title
           datetime(formatString: "YYYY년 M월 D일 HH시 mm분")
         }
       }
