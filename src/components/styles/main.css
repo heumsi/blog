@@ -243,21 +243,32 @@ header nav .nav-item a:last-child {
   
 }
 
-.content .log-list .log-item {
+.content .log-item {
   margin: 2rem 0;
-  /*padding: 1rem 0;*/
-  /*border-top: #999999 0.5px solid;*/
+  line-height: 1.8em;
 }
 
-.content .log-list .log-item .log-title {
+.content .log-title {
 
 }
 
-.content .log-list .log-item .log-content a{
+.content .log-title span {
+  font-size: 0.6em;
+  margin-left: 0.6em;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: 0.33s;
+}
+
+.content .log-title span:hover{
+  opacity: 1;
+}
+
+.content .log-content a{
   text-decoration: underline;
 }
 
-.content .log-list .log-item .log-datetime {
+.content .log-datetime {
   font-size: 0.9em;
   color: #666666;
 }

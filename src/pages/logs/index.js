@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
 import Page from '../../components/templates/page'
-import Log from "../../components/templates/log";
+import Log from "../../components/organisms/log";
 
 const LogsPage = ({ data }) => {
   return (
@@ -10,7 +10,12 @@ const LogsPage = ({ data }) => {
       {
         data.allMdx.nodes.map((node) => (
           <li className="log-item">
-            <Log content={node.body} title={node.frontmatter.title} datetime={node.frontmatter.datetime}></Log>
+            <Log
+              content={node.body}
+              title={node.frontmatter.title}
+              datetime={node.frontmatter.datetime}
+              url={data.site.siteMetadata.siteUrl + "/logs/" + node.slug}>
+            </Log>
           </li>
         ))
       }
@@ -28,6 +33,12 @@ export const query = graphql`
           title
           datetime(formatString: "YYYY년 M월 D일 HH시 mm분")
         }
+        slug
+      }
+    }
+    site {
+      siteMetadata {
+        siteUrl
       }
     }
   }
