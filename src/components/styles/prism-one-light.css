@@ -46,6 +46,7 @@ pre[class*="language-"] {
 	-moz-hyphens: none;
 	-ms-hyphens: none;
 	hyphens: none;
+	font-size: 0.95em;
 }
 
 /* Selection */
@@ -433,7 +434,7 @@ pre > code.diff-highlight .token.token.inserted:not(.prefix) *::selection {
   margin-right: -1em;
   margin-left: -1em;
   padding-right: 1em;
-  padding-left: 0.75em;
+  padding-left: 1em;
 }
 
 /**
