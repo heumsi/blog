@@ -443,7 +443,7 @@ pre > code.diff-highlight .token.token.inserted:not(.prefix) *::selection {
  */
 .gatsby-highlight {
   background: hsl(230, 1%, 98%);
-  margin: 1em 0;
+  margin: 0 0 1em 0;
   padding: 1em;
   overflow: auto;
 }

@@ -184,6 +184,11 @@ header nav .nav-item a:last-child {
   list-style: outside;
   margin-left: 1em;
 }
+.content .post-content ul li p,
+.content .log-content ul li p
+{
+  margin: 0
+}
 
 .content .post-content ol li,
 .content .log-content ol li
@@ -221,6 +226,7 @@ header nav .nav-item a:last-child {
   background: #f6f6f6;
   border-left: 4px solid #e6e6e6;
   padding: 1rem;
+  margin: 1rem 0;
   color: #666666;
 }
 
