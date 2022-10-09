@@ -1444,5 +1444,5 @@ https://grafana.com/grafana/dashboards/12239
 - [CLOVA Engineering 블로그 - NSML 분산 학습 플랫폼의 스케줄링 요구 사항과 해결 방안](https://engineering.clova.ai/posts/2022/08/nsml-scheduler-part-1)
 - [OPA - Tutorial: Ingress Validation](https://www.openpolicyagent.org/docs/latest/kubernetes-tutorial/)
 - [커피고래님 블로그 - 쿠버네티스 Admission Control #1](https://coffeewhale.com/kubernetes/admission-control/2021/04/28/opa1/)
-- [커피고래님 블로그 - 쿠버네티스 Admission Control #2 - Open Policy Agent][https://coffeewhale.com/kubernetes/admission-control/2021/05/04/opa2/]
+- [커피고래님 블로그 - 쿠버네티스 Admission Control #2 - Open Policy Agent](https://coffeewhale.com/kubernetes/admission-control/2021/05/04/opa2/)
 - [커피고래님 블로그 - 쿠버네티스 Admission Control #3 - Open Policy Agent 적용](https://coffeewhale.com/opa3)
