@@ -1,5 +1,5 @@
 ---
-title: 쿠버네티스 클러스터에서 GPU 환경 셋업하기
+title: Kubernetes에서 GPU 환경 셋업하기
 subTitle: GPU Operator부터 Binpack 스케줄러, 모니터링까지
 date: 2022-10-09
 tags:
