@@ -1,6 +1,6 @@
 ---
 title: Kubernetes에서 GPU 환경 셋업하기
-subTitle: GPU Operator부터 Binpack 스케줄러, 모니터링까지
+subTitle: GPU Operator부터 Binpack 스케줄러, OPA를 통한 검증, 모니터링까지
 date: 2022-10-09
 tags:
   - Kubernetes
