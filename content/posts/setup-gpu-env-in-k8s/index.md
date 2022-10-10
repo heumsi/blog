@@ -1425,7 +1425,7 @@ https://grafana.com/grafana/dashboards/12239
 
 - GPU Operator로 쿠버네티스에서 GPU를 사용할 수 있는 환경을 세팅했다.
 - GPU를 사용하는 파드들을 좀 더 리소스 효율적으로 스케줄링 하기위해 Binpack 스케줄러를 별도로 배포했다.
-- OPA를 통해 GPU를 사용하는 파드들은 반드시 Binpack 스케줄러를 사용하게끔 제한을 두었다.
+- GPU를 사용하는 파드들은 반드시 Binpack 스케줄러를 사용하게끔 OPA를 통해 제한했다.
 - Prometheus와 Grafana로 GPU 사용량을 볼 수 있도록 대시보드를 세팅했다.
 
 이 이상으로 GPU 리소스를 어떻게 더 잘 사용할 수 있을지에 대해서는 상황에 따라 달라지지 않을까 싶다.
