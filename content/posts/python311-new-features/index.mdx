@@ -1,0 +1,858 @@
+---
+title: "[번역글] 파이썬 3.11에서의 새로운 기능들"
+subTitle: 파이썬 3.11의 주요 특징들 살펴보기
+date: 2022-11-04
+tags:
+  - Python
+  - Translated
+thumbnail: ./thumbnail.jpg
+---
+
+이 글은 [Real 파이썬 홈페이지](https://realpython.com/)에 올라온 글인 [Python 3.11: Cool New Features for You to Try](https://realpython.com/python311-new-features/)을 번역한 글로,
+원글 작성자에게 허가를 받아 작성했습니다.
+
+글 내용이 꽤 좋고, 저도 다시 번역하고 다듬으며 기억에 더 남기고 싶었네요.
+
+원글은 꽤 긴데, 이 중 필요없겠다 싶은 부분은 과감히 덜어냈고, 추가로 설명하면 좋겠다할 부분은 직접 더 작성했습니다.
+내용이 길더라도 하나도 빠짐없이 알아보고 싶으신 분은 원글을 읽어보시길 추천드립니다.
+
+---
+
+파이썬 3.11이 2022년 10월 24일에 출시되었습니다.
+이 글에서는 파이썬 3.11에서의 가장 멋지고 영향력 있는 새로운 기능을 살펴보려고 합니다.
+구체적으로는 다음과 기능들에 대해 알아봅니다.
+
+- 더 많은 정보를 제공하는 오류 메시지 (Informative tracebacks)
+- 더 빠른 코드 실행 (Faster code execution)
+- 비동기 코드 작업을 단순화하는 작업 및 예외 그룹 (Task and Exception groups)
+- 파이썬의 정적 타이핑 지원을 개선하는 몇 가지 새로운 타이핑 기능 (Static typing support)
+- 구성 파일 작업을 위한 기본 TOML 지원 (TOML Support)
+
+## 더 많은 정보를 제공하는 오류 메시지
+
+파이썬 3.11에서는 오류 메시지의 Traceback에 장식적 주석(Decorative annotations)이 추가되었습니다.
+이를 통해 오류 메시지를 보다 신속하게 해석할 수 있습니다.
+
+예시를 살펴봅시다.
+
+```python
+# inverse.py
+
+def inverse(number):
+    return 1 / number
+
+print(inverse(0))
+```
+
+위 코드는 1을 0으로 나누려고 하기 있기 때문에 에러를 발생시킵니다.
+
+어떤 식으로 에러가 나오는지 확인해봅시다.
+
+```python{4-5,7-8}
+$ python inverse.py
+Traceback (most recent call last):
+  File "/home/realpython/inverse.py", line 6, in <module>
+    print(inverse(0))
+          ^^^^^^^^^^
+  File "/home/realpython/inverse.py", line 4, in inverse
+    return 1 / number
+           ~~^~~~~~~~
+ZeroDivisionError: division by zero
+```
+
+`^` 와 `~` 기호가 Traceback에 포함되어 있습니다.
+이 기호들은 에러가 코드 어디에서 발생했는지 알려줍니다.
+
+> *** 역자가 추가하는 내용입니다**
+>
+> 파이썬 3.10에서는 Traceback 에 `^`, `~` 기호가 포함되어 있지 않습니다.
+> 아래는 같은 코드를 3.10에서 실행시켰을 때의 모습입니다.
+> ```bash
+> $ python inverse.py
+> Traceback (most recent call last):
+>   File "/Users/user/Desktop/heumsi/repos/blog/content/posts/python311-new-features/inverse.py", line 6, in <module>
+>     print(inverse(0))
+>   File "/Users/user/Desktop/heumsi/repos/blog/content/posts/python311-new-features/inverse.py", line 4, in inverse
+>     return 1 / number
+> ZeroDivisionError: division by zero
+> ```
+
+예시를 하나 더 봅시다.
+
+다음처럼 `KeyError` 예외가 발생하는 경우에도, 정확히 어디에서 예외가 발생했는지 장식적 주석을 통해 빠르게 알 수 있습니다.
+
+```bash{7-8}
+>>> programmers[0]
+{'name': {'first': 'Uncle Barry'}}
+
+>>> Person.from_dict(programmers[0])
+Traceback (most recent call last):
+  File "/home/realpython/programmers.py", line 17, in from_dict
+    name=f"{info['name']['first']} {info['name']['last']}",
+                                    ~~~~~~~~~~~~^^^^^^^^
+KeyError: 'last'
+```
+
+## 더 빠른 코드 실행
+
+[파이썬 3.11은 3.10보다 평균적으로 25% 빨라졌습니다.](https://docs.python.org/3.11/whatsnew/3.11.html#faster-cpython)
+어떻게 해서 더 빨라지게 했을까요?
+
+주요 아이디어는 자주 수행되는 작업의 명령어를 최적화하여 실행 중인 코드의 속도를 높이는 것입니다.
+[JIT(Just-In-Time)](https://en.wikipedia.org/wiki/Just-in-time_compilation)과 비슷하지만, 파이썬에서 바이트 코드는 즉석에서 조정되거나 변경됩니다.
+
+> 파이썬 코드는 실행되기 전에 바이트 코드로 컴파일 됩니다. 
+> 바이트코드는 일반 파이썬 코드보다 더 기본적인 명령어로 구성되어 있습니다.
+>
+> 이 바이트 코드를 살펴보고 싶다면, 다음처럼 `dis` 모듈을 사용할 수 있습니다.
+> ```bash
+> >>> def feet_to_meters(feet):
+> ...     return 0.3048 * feet
+> 
+> >>> import dis
+> >>> dis.dis(feet_to_meters)
+>   1           0 RESUME                   0
+> 
+>   2           2 LOAD_CONST               1 (0.3048)
+>               4 LOAD_FAST                0 (feet)
+>               6 BINARY_OP                5 (*)
+>              10 RETURN_VALUE
+> ```
+> 5개의 열은 행 번호, 바이트 주소, 작업 코드 이름, 작업 매개변수(매개변수 해석) 입니다.
+>
+> 일반적으로 Python을 작성하기 위해 바이트 코드에 대해 알 필요는 없습니다. 
+> 하지만 파이썬이 내부적으로 어떻게 작동하는지 이해하는 데 도움이 될 수 있습니다.
+
+파이썬 3.11에서는 바이트코드를 생성할 때 단축(quickening)이라는 단계가 새로 추가 되었습니다.
+이 단계에서 런타임동안 최적화될 수 있는 명령은 적응형(adaptive) 명령으로 대체됩니다.
+이것은 8번의 동일한 명령 호출 후에 발생합니다.
+
+`dis` 모듈을 통해 직접 살펴봅시다.
+다음처럼 `feet_to_meters()` 함수를 7번 호출합니다.
+
+```bash
+>>> def feet_to_meters(feet):
+...     return 0.3048 * feet
+...
+
+>>> feet_to_meters(1.1)
+0.33528
+>>> feet_to_meters(2.2)
+0.67056
+>>> feet_to_meters(3.3)
+1.00584
+>>> feet_to_meters(4.4)
+1.34112
+>>> feet_to_meters(5.5)
+1.6764000000000001
+>>> feet_to_meters(6.6)
+2.01168
+>>> feet_to_meters(7.7)
+2.34696
+```
+
+`feet_to_meters()` 함수의 바이트코드를 살펴봅시다.
+
+```python
+>>> import dis
+>>> dis.dis(feet_to_meters, adaptive=True)
+  1           0 RESUME                   0
+
+  2           2 LOAD_CONST               1 (0.3048)
+              4 LOAD_FAST                0 (feet)
+              6 BINARY_OP                5 (*)
+             10 RETURN_VALUE
+```
+
+이 바이트코드는 `feet_to_meters` 함수를 8번째 호출할 때 달라집니다.
+
+```bash{5,7,9}
+>>> feet_to_meters(8.8)
+2.68224
+
+>>> dis.dis(feet_to_meters, adaptive=True)
+  1           0 RESUME_QUICK                 0
+
+  2           2 LOAD_CONST__LOAD_FAST        1 (0.3048)
+              4 LOAD_FAST                    0 (feet)
+              6 BINARY_OP_MULTIPLY_FLOAT     5 (*)
+             10 RETURN_VALUE
+```
+
+원래 명령어 중 일부가 특화된 명령어로 대체되었습니다.
+예를 들어, `BINARY_OP` 명령어는 두 `float` 값끼리 곱하는 것에 특화된 `BINARY_OP_MULTIPLY_FLOAT` 명령으로 대체되었습니다.
+
+만약 `feet_to_meters()` 함수의 파라미터 값으로 `float` 타입이 아닌 다른 유형의 타입이 들어오면, 원래의 바이트코드 명령어로 다시 원복됩니다.
+이를 확인해봅시다.
+
+이번엔 함수를 52번 더 호출하되, 이제 파라미터로 정수 타입 값을 넘깁니다.
+
+```bash{10}
+>>> for feet in range(52):
+...     feet_to_meters(feet)
+...
+
+>>> dis.dis(feet_to_meters, adaptive=True)
+  1           0 RESUME_QUICK                 0
+
+  2           2 LOAD_CONST__LOAD_FAST        1 (0.3048)
+              4 LOAD_FAST                    0 (feet)
+              6 BINARY_OP_MULTIPLY_FLOAT     5 (*)
+             10 RETURN_VALUE
+```
+
+여전히 `feet_to_meters()` 함수가 `float` 타입 값끼리 곱할 수 있는 것에 최적화 되어 있습니다.
+정수로 한 번 더 호출하면 `feet_to_meters()` 는 특화되지 않은 적응형(adaptive) 명령어로 변환됩니다.
+
+```bash{9}
+>>> feet_to_meters(52)
+15.8496
+
+>>> dis.dis(feet_to_meters, adaptive=True)
+  1           0 RESUME_QUICK              0
+
+  2           2 LOAD_CONST__LOAD_FAST     1 (0.3048)
+              4 LOAD_FAST                 0 (feet)
+              6 BINARY_OP_ADAPTIVE        5 (*)
+             10 RETURN_VALUE
+```
+
+이 경우 `BINARY_OP_MULTIPLY_INT` 가 아니라 `BINARY_OP_ADAPTIVE` 로 변한 이유는, `feet_to_meters()` 함수 내부에 이미 float 값(`0.3048`)이 곱해지기 때문입니다.
+`int` 타입과 `float` 타입 값끼리 곱의 최적화는 꽤 어려워서, 현재로서 존재하는 특화된 명령어는 없습니다.
+
+파이썬 3.11에서는 이런 방식으로 기존 코드를 최적화하고 있으며, 이는 [파이썬 3.12](https://docs.python.org/3.12/whatsnew/3.12.html)에서도 지속될 예정입니다.
+
+## 작업 그룹 (`TaskGroup`)
+
+파이썬 3.11에서는 비동기 작업을 실행하고 모니터링하기 위한 더 깨끗한 `TaskGroup` 구문을 사용할 수 있습니다.
+
+`asyncio` 모듈로 여러 비동기 작업을 실행하는 전통적인 방법은 `create_task()` 함수로 작업(Task)을 만든 뒤 ` gather()` 함수로 이 작업을 기다리는 것이었습니다.
+예를 들면 다음과 같습니다.
+
+```python
+tasks = [asyncio.create_task(run_some_task(param)) for param in params]
+await asyncio.gather(*tasks)
+```
+
+파이썬 3.11에서는 `TaskGroup` 구문을 이용하여 다음처럼 더 간단하게 작성할 수 있습니다.
+
+```python
+async with asyncio.TaskGroup() as tg:
+    for param in params:
+        tg.create_task(run_some_task(param))
+```
+
+`TaskGroup` 구문을 사용하는 좀 더 실용적인 예제를 살펴봅시다.
+PEP 문서로 부터 여러 파일을 다운로드해야 한다고 합시다.
+코드는 다음과 같이 작성할 수 있습니다.
+
+```python{5-7}
+import asyncio
+import aiohttp
+
+async def download_peps(session, peps):
+    async with asyncio.TaskGroup() as tg:
+        for pep in peps:
+            tg.create_task(download_pep(session, pep))
+
+PEP_URL = (
+    "https://raw.githubusercontent.com/python/peps/master/pep-{pep:04d}.txt"
+)
+
+async def main(peps):
+    async with aiohttp.ClientSession() as session:
+        await download_peps(session, peps)
+```
+
+여러 비동기 작업으로 작업할 때 한 가지 문제는, 여러 개의 작업이 언제든지 오류를 일으킬 수 있다는 것입니다.
+파이썬 3.11에는 여러 동시 오류를 추적하도록 설계된 `ExceptionGroup` 이 도입되었는데, 이에 대해서는 뒤에서 더 알아보겠습니다.
+
+## 개선된 Type Variable
+
+Python은 동적으로 Type이 지정된 언어이지만, Type Hinting을 통해 정적 유형을 선택적으로 지정할 수 있습니다.
+
+파이썬 3.11에서는 Type과 관련된 5개의 PEP가 있었습니다.
+
+- [PEP 646](https://peps.python.org/pep-0646): Variadic generics
+- [PEP 655](https://peps.python.org/pep-0655): Marking individual TypedDict items as required or potentially missing
+- [PEP 673](https://peps.python.org/pep-0673): Self type
+- [PEP 675](https://peps.python.org/pep-0675): Arbitrary literal string type
+- [PEP 681](https://peps.python.org/pep-0681): Data class transforms
+
+여기서는 다음 두 개에 대해서 좀 더 집중적으로 다룹니다.
+
+- Self type
+- Variadic generics
+
+### Self type
+
+Type 변수는 처음부터 Python의 정적 유형 지정 시스템의 일부였습니다.
+다음처럼 `TypeVar` 를 사용하여 제네릭 타입을 매개변수화할 수 있습니다.
+
+```python
+from typing import Sequence, TypeVar
+
+T = TypeVar("T")
+
+def first(sequence: Sequence[T]) -> T:
+    return sequence[0]
+```
+
+또한 다음처럼 `bound` 파라미터를 사용하여 특정 클래스와 서브 클래스를 지정할 수 있습니다.
+
+```python{2,4,12}
+from dataclasses import dataclass
+from typing import Any, Type, TypeVar
+
+TPerson = TypeVar("TPerson", bound="Person")
+
+@dataclass
+class Person:
+    name: str
+    life_span: tuple[int, int]
+
+    @classmethod
+    def from_dict(cls: Type[TPerson], info: dict[str, Any]) -> TPerson:
+        return cls(
+            name=f"{info['name']['first']} {info['name']['last']}",
+            life_span=(info["birth"]["year"], info["death"]["year"]),
+        )
+```
+
+그러나 이는 가독성이 좋아보이지는 않습니다.
+
+파이썬 3.11에서는 일부 상황에서 다음처럼 `TypeVar` 대신 `Self` 를 사용할 수 있습니다.
+
+```python{1,9}
+from typing import Any, Self
+
+@dataclass
+class Person:
+    name: str
+    life_span: tuple[int, int]
+
+    @classmethod
+    def from_dict(cls, info: dict[str, Any]) -> Self:
+        return cls(
+            name=f"{info['name']['first']} {info['name']['last']}",
+            life_span=(info["birth"]["year"], info["death"]["year"]),
+        )
+```
+
+이제 클래스에서 자신을 가르키는 경우, `TypeVar` 로 Type 변수를 별도로 만들어서 쓰지 않아도 됩니다.
+
+### Variadic generics
+
+`TypeVar` 의 한 가지 제한 사항은 한 번에 한 Type만 사용할 수 있다는 것입니다.
+
+예를 들어, 요소가 2개인 튜플의 순서를 뒤집는 함수가 다음처럼 있다고 해봅시다.
+
+```python{3-4,6}
+from typing import TypeVar
+
+T0 = TypeVar("T0")
+T1 = TypeVar("T1")
+
+def flip(pair: tuple[T0, T1]) -> tuple[T1, T0]:
+    first, second = pair
+    return (second, first)
+```
+
+쓰기가 좀 번거롭긴 하지만 그래도 아직까진 괜찮습니다.
+하지만 다음과 같이 튜플 내에 여러 개의 아이템을 가지는 변수가 담겨있을 때 문제가 발생합니다.
+
+```python
+def cycle(elements):
+    first, *rest = elements
+    return (*rest, first)
+```
+
+`rest` 가 몇 개의 아이템을 가지고 있는지 알 수 없어서, 이를 Type 변수로 표현하기가 어렵습니다.
+만약 n개의 아이템을 가지고 있다고 한다면, n 개의 `TypeVar` 변수를 정의해야하는데, 이 또한 번거롭습니다.
+
+파이썬 3.11에서는 이 문제를 해결하기 위해 `TypeVarTuple` 가 도입되었습니다.
+다음처럼 `TypeVarTuple` 를 통해 임의의 수의 `TypeVar` 를 대신할 수 있습니다.
+
+```python{1,3-4,6}
+from typing import TypeVar, TypeVarTuple
+
+T0 = TypeVar("T0")
+Ts = TypeVarTuple("Ts")
+
+def cycle(elements: tuple[T0, *Ts]) -> tuple[*Ts, T0]:
+    first, *rest = elements
+    return (*rest, first)
+```
+
+`TypeVarTuple` 를 쓰는 경우 앞에 `*` 는 필수로 들어가야합니다.
+이 의미는 일반적으로 많이 쓰이는 `*args` 처럼, unpack 문법을 떠올리면 쉽습니다.
+
+> 파이썬 3.10 에서도 [typing_extensions](https://pypi.org/project/typing-extensions) 라이브러리를 설치한 뒤, 다음처럼 위 두 기능을 포함한 Typing 모듈의 새 기능들을 사용할 수 있습니다.
+>
+> ```python{1,6}
+> from typing_extensions import TypeVar, TypeVarTuple, Unpack
+>
+> T0 = TypeVar("T0")
+> Ts = TypeVarTuple("Ts")
+>
+> def cycle(elements: tuple[T0, Unpack[Ts]]) -> tuple[Unpack[Ts], T0]:
+>     first, *rest = elements
+>     return (*rest, first)
+> ```
+>
+> 단, `*Ts` 문법은 3.11에서만 가능합니다.
+> 이전 버전에서는 `Unpack[Ts]` 와 같이 사용해야 합니다.
+
+## 구성 파일 작업을 위한 기본 TOML 지원
+
+TOML은 Tom's Obvious Minimal Language의 줄임말로, 지난 10년 동안 인기를 얻은 Configuration 파일 형식입니다.
+파이썬 커뮤니티 역시 패키지 및 프로젝트에 대한 메타데이터를 지정할 때, TOML을 사용했습니다.
+
+> 만약 TOML이 낯설다면, [파이썬 및 TOML: New Best Friends](https://realpython.com/python311-new-features/#improved-type-variables)에서 자세히 배우실 수 있습니다.
+
+TOML은 다양한 도구에서 수년 동안 사용되어 왔지만, Python에는 내장된 TOML 지원이 없었습니다.
+이제 파이썬 3.11에서는 [tomllib](https://docs.python.org/3.11/library/tomllib.html)이 표준 라이브러리 추가되었습니다.
+이제 이 패키지를 통해 TOML 파일을 구문 분석할 수 있습니다.
+
+예를 들어 다음과 같은 TOML 파일이 있다고 합시다.
+
+```toml
+# units.toml
+
+[second]
+label   = { singular = "second", plural = "seconds" }
+aliases = ["s", "sec", "seconds"]
+
+[minute]
+label      = { singular = "minute", plural = "minutes" }
+aliases    = ["min", "minutes"]
+multiplier = 60
+to_unit    = "second"
+```
+
+이 파일은 다음과 같이 `tomllib.load()` 함수를 통해 읽어올 수 있습니다.
+
+```python{1,3}
+>>> import tomllib
+>>> with open("units.toml", mode="rb") as file:
+...     units = tomllib.load(file)
+...
+>>> units
+{'second': {'label': {'singular': 'second', 'plural': 'seconds'}, ... }}
+```
+
+또는 다음처럼 `tomllib.loads()` 함수를 통해 읽어올 수도 있습니다.
+
+```python{1,3-5}
+>>> import tomllib
+>>> import pathlib
+>>> units = tomllib.loads(
+...     pathlib.Path("units.toml").read_text(encoding="utf-8")
+... )
+>>> units
+{'second': {'label': {'singular': 'second', 'plural': 'seconds'}, ... }}
+```
+
+> tomllib은 [tomli](https://pypi.org/project/tomli/) 라이브러리를 기반으로 하고 있기 때문에, 파이썬 3.11 이전 버전에서는 tomli 라이브러리를 설치하여 위 기능들을 사용할 수 있습니다.
+> 추후 버전 업데이트를 고려하여 다음과 같이 작성하면 될 것입니다.
+> ```python
+> try:
+>     import tomllib
+> except ModuleNotFoundError:
+>     import tomli as tomllib
+> ```
+
+## 기타 멋진 기능들
+
+지금까지 파이썬 3.11의 가장 큰 변경 사항과 개선 사항에 대해 배웠습니다.
+그러나 탐색할 기능이 더 많이 있습니다.
+이 섹션에서는 헤드라인 아래에 숨어 있을 수 있는 몇 가지 새로운 기능을 살펴보겠습니다.
+
+### 더 빠른 시작 시간
+
+파이썬 스크립트를 실행할 때 인터프리터가 초기화될 때 몇 가지 일이 발생합니다.
+이로 인해 가장 간단한 프로그램도 실행하는 데 몇 밀리초가 걸립니다.
+
+파이썬 3.11은 모듈을 가져오는 작업 속도의 개선으로, 이전보다 더 빠르게 프로그램을 실행합니다.
+
+얼마나 개선되었는지 확인하기 위해, 구체적인 예시를 하나 살펴봅시다.
+다음과 같은 프로그램이 있다고 합시다.
+
+```python
+# snakesay.py
+import sys
+
+message = " ".join(sys.argv[1:])
+bubble_length = len(message) + 2
+print(
+    rf"""
+       {"_" * bubble_length}
+      ( {message} )
+       {"‾" * bubble_length}
+        \
+         \    __
+          \  [oo]
+             (__)\
+               λ \\
+                 _\\__
+                (_____)_
+               (________)Oo°"""
+)
+```
+
+이 프로그램을 파이썬 인터프리터로 실행할 때, 다음처럼 `-X importtime` 옵션을 주어 모듈을 가져오는데 소요되는 시간을 측정할 수 있습니다.
+
+```bash
+$ python -X importtime -S snakesay.py Imports are faster!
+import time: self [us] | cumulative | imported package
+import time:       283 |        283 |   _io
+import time:        56 |         56 |   marshal
+import time:       647 |        647 |   posix
+import time:       587 |       1573 | _frozen_importlib_external
+import time:       167 |        167 |   time
+import time:       191 |        358 | zipimport
+import time:        90 |         90 |     _codecs
+import time:       561 |        651 |   codecs
+import time:       825 |        825 |   encodings.aliases
+import time:      1136 |       2611 | encodings
+import time:       417 |        417 | encodings.utf_8
+import time:       174 |        174 | _signal
+import time:        56 |         56 |     _abc
+import time:       251 |        306 |   abc
+import time:       310 |        616 | io
+       _____________________
+      ( Imports are faster! )
+       ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+        \
+         \    __
+          \  [oo]
+             (__)\
+               λ \\
+                 _\\__
+                (_____)_
+               (________)Oo°
+```
+
+표의 숫자는 마이크로초 단위로 측정된 값입니다.
+
+위에서 모듈을 가져오는데 걸리는 시간을 파이썬 3.10과 비교하면 다음과 같습니다.
+
+| 모듈                          | 파이썬 3.11   | 파이썬 3.10   | 빨라진 속도   |
+| ---------------------------- | ----------- | ----------- | ----------- |
+| `_frozen_importlib_external` | 1573        | 2255        | 1.43배      |
+| `zipimport`                  | 358         | 558         | 1.56배      |
+| `encodings`                  | 2611        | 3009        | 1.15배      |
+| `encodings.utf_8`            | 417         | 409         | 0.98배      |
+| `_signal`                    | 174         | 173         | 0.99배      |
+| `io`                         | 616         | 1216        | 1.97배      |
+| **총**                       | **5749**    | **7620**    | **1.33배**  |
+
+속도가 향상된 한 가지 큰 이유는 "캐시된" 바이트 코드가 저장되고 읽는 방법이 바뀌었기 때문입니다.
+
+파이썬 인터프리터는 모듈을 실행할 때 소스 코드를 바이트 코드로 먼저 컴파일합니다.
+파이썬 3.10에서 파이썬 모듈 실행 과정은 다음과 같았습니다.
+
+```
+Read __pycache__ -> Unmarshal -> Heap allocated code object -> Evaluate
+```
+
+파이썬 3.11에서 파이썬 시작에 필수적인 핵심 모듈은 "고정"되었습니다.
+이는 코드 개체(및 바이트 코드)가 인터프리터에 의해 정적으로 할당됨을 의미합니다.
+이렇게 하면 모듈 실행 프로세스의 단계가 다음과 같이 줄어듭니다.
+
+```
+Statically allocated code object -> Evaluate
+```
+
+이제 파이썬 3.11에서 인터프리터 시작이 10-15% 빨라졌습니다.
+이 결과는 단기 실행 프로그램에 큰 영향을 미칩니다.
+
+### 비용 없는 예외
+
+파이썬 3.11에서 예외 객체와 예외 핸들링 명령어들은 가벼워졌고,
+`try ... except` 블럭에서 `except` 문이 실행되지 않는 한 작은 오버헤드만 존재합니다.
+
+예를 들어, 다음과 같은 예외 처리가 포함된 프로그램이 있다고 해봅시다.
+
+```python
+>>> def inverse(number):
+...     try:
+...         return 1 / number
+...     except ZeroDivisionError:
+...         print("0 has no inverse")
+...
+```
+
+`inverse()` 함수를 `dis` 모듈을 통해 내부 명령어를 확인해보면 다음과 같습니다.
+
+```python{5,31-34}
+>>> import dis
+>>> dis.dis(inverse)
+  1           0 RESUME                   0
+
+  2           2 NOP
+
+  3           4 LOAD_CONST               1 (1)
+              6 LOAD_FAST                0 (number)
+              8 BINARY_OP               11 (/)
+             12 RETURN_VALUE
+        >>   14 PUSH_EXC_INFO
+
+  4          16 LOAD_GLOBAL              0 (ZeroDivisionError)
+             28 CHECK_EXC_MATCH
+             30 POP_JUMP_FORWARD_IF_FALSE    19 (to 70)
+             32 POP_TOP
+
+  5          34 LOAD_GLOBAL              3 (NULL + print)
+             46 LOAD_CONST               2 ('0 has no inverse')
+             48 PRECALL                  1
+             52 CALL                     1
+             62 POP_TOP
+             64 POP_EXCEPT
+             66 LOAD_CONST               0 (None)
+             68 RETURN_VALUE
+
+  4     >>   70 RERAISE                  0
+        >>   72 COPY                     3
+             74 POP_EXCEPT
+             76 RERAISE                  1
+ExceptionTable:
+  4 to 10 -> 14 [0]
+  14 to 62 -> 72 [1] lasti
+  70 to 70 -> 72 [1] lasti
+```
+
+주목할 점은 `inverse` 함수 2번째 줄의 `try` 가 [`NOP`](https://docs.python.org/3/library/dis.html#opcode-NOP) 명령어로 바뀌었다는 것입니다.
+이 명령어는 아무것도 수행하지 않습니다.
+
+한편 맨 마지막에는 `ExceptionTable` 이 별도로 존재합니다.
+이 테이블은 예외 발생 시 어느 코드 라인로 인터프리터를 점프해야하는지에 대한 정보를 담고있습니다.
+
+이는 파이썬 3.10 및 이전 버전에서의 예외 처리와 차이가 있습니다.
+예를 들어, `try` 는 기존에는 [`SETUP_FINALLY`](https://docs.python.org/3.10/library/dis.html#opcode-SETUP_FINALLY) 명령어로 되어있었고,
+이 명령어는 첫번째 예외 블럭에 대한 포인터를 포함했습니다.
+이를 별도로 `ExceptionTable` 로 대체한 것은 예외가 일어나지 않을 때, `try` 문을 좀 더 가볍게 만듭니다.
+
+이와 같은 비용 없는 예외는 일반적으로 `try ... catch` 문을 많이 사용하는 [EAFP(Easier-to-Ask-Forgiveness-than-Permission) 스타일](https://realpython.com/python-lbyl-vs-eafp/)과 잘 맞습니다.
+
+> *** 역자가 추가하는 내용입니다**
+>
+> 파이썬 3.10에서 똑같이 `dis` 로 `inverse` 함수를 확인해보면 다음과 같습니다.
+>
+> ```python{2}
+> >>> dis.dis(inverse)
+> >>>   2           0 SETUP_FINALLY            5 (to 12)
+> >>>
+> >>>   3           2 LOAD_CONST               1 (1)
+> >>>               4 LOAD_FAST                0 (number)
+> >>>               6 BINARY_TRUE_DIVIDE
+> >>>               8 POP_BLOCK
+> >>>              10 RETURN_VALUE
+> >>>
+> >>>   4     >>   12 DUP_TOP
+> >>>              14 LOAD_GLOBAL              0 (ZeroDivisionError)
+> >>>              16 JUMP_IF_NOT_EXC_MATCH    19 (to 38)
+> >>>              18 POP_TOP
+> >>>              20 POP_TOP
+> >>>              22 POP_TOP
+> >>>
+> >>>   5          24 LOAD_GLOBAL              1 (print)
+> >>>              26 LOAD_CONST               2 ('error')
+> >>>              28 CALL_FUNCTION            1
+> >>>              30 POP_TOP
+> >>>              32 POP_EXCEPT
+> >>>              34 LOAD_CONST               0 (None)
+> >>>              36 RETURN_VALUE
+> >>>
+> >>>   4     >>   38 RERAISE                  0
+> ```
+>
+> `try` 문은 `NOP` 이 아닌 `SETUP_FINALLY` 명령어로 되어있고, `ExceptionTable` 도 없습니다.
+
+
+### 예외 그룹 (`ExceptionGroup`)
+
+우리는 위에서 `TaskGroup` 을 배웠습니다.
+이 때 `ExceptionGroup` 으로 한 번에 여러 오류를 처리할 수 있다고 언급했습니다.
+
+이제 `ExceptionGroup` 에 대해서 알아봅시다.
+`ExceptionGroup` 은 다른 여러 예외를 하나로 래핑해줍니다.
+예를 들면 다음처럼 `ExceptionGroup` 을 만들 수 있습니다.
+
+```python
+>>> ExceptionGroup("twice", [TypeError("int"), ValueError(654)])
+ExceptionGroup('twice', [TypeError('int'), ValueError(654)])
+```
+
+`"twice"` 라고 하는 `ExceptionGroup` 은 `TypeError` 과 `ValueError` 을 래핑합니다.
+
+이 `ExceptionGroup` 을 `raise` 하면 다음과 같은 결과가 나옵니다.
+
+```python
+>>> raise ExceptionGroup("twice", [TypeError("int"), ValueError(654)])
+  + Exception Group Traceback (most recent call last):
+  |   File "<stdin>", line 1, in <module>
+  | ExceptionGroup: twice (2 sub-exceptions)
+  +-+---------------- 1 ----------------
+    | TypeError: int
+    +---------------- 2 ----------------
+    | ValueError: 654
+    +------------------------------------
+```
+
+이 오류 메시지는 두 개의 하위 예외 `TypeError` 과 `ValueError` 도 출력해줍니다.
+
+`ExceptionGroup` 으로 두 예외를 래핑했지만, 다시 개별로 처리하고 싶은 경우 다음처럼 `except*` 문을 활용하면 됩니다.
+
+```python{3,5}
+>>> try:
+...     raise ExceptionGroup("twice", [TypeError("int"), ValueError(654)])
+... except* ValueError as err:
+...     print(f"handling ValueError: {err.exceptions}")
+... except* TypeError as err:
+...     print(f"handling TypeError: {err.exceptions}")
+...
+handling ValueError: (ValueError(654),)
+handling TypeError: (TypeError('int'),)
+```
+
+위처럼 일반 `except` 문과 달리 여러 `except*` 문이 실행될 수 있습니다.
+
+`except*` 문으로 별도로 핸들링하지 않으면 다음처럼 핸들링하지 않은 예외만 오류 메시지에 출력됩니다.
+
+```python{7-12}
+>>> try:
+...     raise ExceptionGroup("twice", [TypeError("int"), ValueError(654)])
+... except* ValueError as err:
+...     print(f"handling ValueError: {err.exceptions}")
+...
+handling ValueError: (ValueError(654),)
+  + Exception Group Traceback (most recent call last):
+  |   File "<stdin>", line 2, in <module>
+  | ExceptionGroup: twice (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | TypeError: int
+    +------------------------------------
+```
+
+`ExceptionGroup` 와 `except*` 구문은 일반적인 예외 객체 및 `except` 문을 대체하지는 않습니다.
+사실, `ExceptionGroup` 을 직접 만드는 사용 사례는 많지 않을 것입니다.
+다만 `ExceptionGroup` 은 asyncio와 같은 라이브러리에서 주로 사용될 것입니다.
+
+### 예외에 메모 추가
+
+예외 객체에 다음처럼 `.add_note()` 메서드를 통해 메모를 추가하고, `__notes__` 속성을 통해 확인할 수 있습니다.
+
+```python{2-3,5-6,12-13}
+>>> err = ValueError(678)
+>>> err.add_note("Enriching Exceptions with Notes")
+>>> err.add_note("파이썬 3.11")
+
+>>> err.__notes__
+['Enriching Exceptions with Notes', '파이썬 3.11']
+
+>>> raise err
+Traceback (most recent call last):
+  ...
+ValueError: 678
+Enriching Exceptions with Notes
+파이썬 3.11
+```
+
+오류가 발생하면 관련 메모가 트레이스백 하단에 출력됩니다.
+
+다음 예제는 `except` 블록에서 예외에 메모를 추가합니다.
+오류 메시지를 프로그램의 실행 중인 로그와 비교해야 하는 경우에 유용할 수 있습니다.
+
+```python{14}
+# timestamped_errors.py
+
+from datetime import datetime
+
+def main():
+    inverse(0)
+def inverse(number):
+    return 1 / number
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as err:
+        err.add_note(f"Raised at {datetime.now()}")
+        raise
+```
+
+```bash{5}
+$ python timestamped_errors.py
+Traceback (most recent call last):
+  ...
+ZeroDivisionError: division by zero
+Raised at 2022-10-24 12:18:13.913838
+```
+
+> 동일한 패턴을 사용하여 예외에 다른 유용한 정보를 추가할 수 있습니다.
+> 자세한 내용은 [파이썬 3.11 미리 보기](https://realpython.com/python311-exception-groups/#annotate-exceptions-with-custom-notes) 및 [PEP 678](https://peps.python.org/pep-0678/)을 참조하세요.
+
+### 음수 0 형식
+
+부동 소수점 숫자로 계산할 때 마주칠 수 있는 이상한 개념 중 하나는 음수 0 입니다.
+다음처럼 음수 0과 일반 0이 다르게 렌더링되는 것을 관찰할 수 있습니다.
+
+```python
+>>> -0.0
+-0.0
+>>> 0.0
+0.0
+```
+
+파이썬은 두 표현이 같다는 것을 알고 있습니다.
+
+```python
+>>> -0.0 == 0.0
+True
+```
+
+일반적으로 계산에서 음수 0에 대해 걱정할 필요가 없습니다.
+그러나 반올림된 작은 음수가 포함된 데이터를 표시하면 기대하지 않은 결과가 발생할 수 있습니다.
+
+```python
+>>> small = -0.00311
+>>> f"A small number: {small:.2f}"
+'A small number: -0.00'
+```
+
+일반적으로 숫자가 0으로 반올림되면 부호 없는 0으로 표시되는걸 기대합니다.
+그러나 위 경우 0 앞에 음수 기호가 표시되어 있습니다.
+
+파이썬 3.11에서는 f-String 문법에 다음처럼 `z` 를 추가하여 이를 부호 없는 0으로 표시할 수 있습니다.
+
+```python{2}
+>>> small = -0.00311
+>>> f"A small number: {small:z.2f}"
+'A small number: 0.00'
+```
+
+### 추후에 제거될 내장 모듈 표시
+
+파이썬에서는 기본적으로 많은 내장 모듈들을 제공했습니다.
+그러나 시간이 지남에 따라 잘 사용되지 않는 내장 모듈들이 존재하게 되었고, 이들 중 일부는 추후에 내장 모듈 목록에서 사라지게 될 예정입니다.
+
+이 모듈들은 import 할 때 다음과 같은 경고 메시지를 보여줍니다.
+
+```python
+>>> import imghdr
+<stdin>:1: DeprecationWarning: 'imghdr' is deprecated and slated for
+           removal in 파이썬 3.13
+```
+
+추후에 사라지게 될 내장 모듈 목록은 [PEP-594](https://peps.python.org/pep-0594/#deprecated-modules)에서 확인하실 수 있습니다.
+
+## 결론
+
+다음과 같은 새로운 기능과 개선 사항을 확인했습니다.
+
+- 더 유익한 트레이스백으로 더 나은 오류 메시지
+- Faster CPython 프로젝트 의 상당한 노력으로 인한 더 빠른 코드 실행
+- 비동기 코드 작업을 단순화하는 작업 및 예외 그룹
+- Python의 정적 입력 지원 을 개선하는 몇 가지 새로운 입력 기능
+- 구성 파일 작업을 위한 기본 TOML 지원
