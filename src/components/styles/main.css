@@ -169,6 +169,26 @@ header nav .nav-item a:last-child {
   margin: 1em 0;
 }
 
+.content .post-content hr {
+  background-color: #eeeeee;
+  height: 1px;
+  border: 0;
+}
+
+.content .post-content table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.content .post-content table th {
+  background-color: hsl(230, 1%, 98%);
+}
+
+.content .post-content table th, td {
+  padding: 0.5em;
+  border: 1px solid #cccccc;
+}
+
 .content .post-content a,
 .content .log-content a{
   text-decoration: underline;
@@ -236,9 +256,21 @@ header nav .nav-item a:last-child {
 }
 
 .content .post-content blockquote p,
-.content .log-content blockquote p {
+.content .post-content blockquote ul,
+.content .post-content blockquote ol,
+.content .log-content blockquote p,
+.content .log-content blockquote ul,
+.content .log-content blockquote ol{
+  margin: 1em 0;
+}
+
+.content .post-content blockquote p:first-child,
+.content .post-content blockquote p:last-child,
+.content .log-content blockquote p:first-child,
+.content .log-content blockquote p:last-child{
   margin: 0;
 }
+
 
 .content .post-content .mermaid {
   width: fit-content;
