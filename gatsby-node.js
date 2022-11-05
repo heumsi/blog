@@ -12,6 +12,15 @@ exports.createPages = async ({actions, graphql, reporter}) => {
             title
             date(formatString: "YYYY년 M월 D일")
             tags
+            thumbnail {
+              childImageSharp {
+                gatsbyImageData(
+                  height: 400
+                  placeholder: BLURRED
+                  formats: [AUTO, WEBP, AVIF]
+                )
+              }
+            }
           }
           body
           slug
@@ -45,6 +54,7 @@ exports.createPages = async ({actions, graphql, reporter}) => {
       context: {
         url: query.data.site.siteMetadata.siteUrl + "/posts/" + node.slug,
         id: node.id,
+        thumbnail: node.frontmatter.thumbnail,
         title: node.frontmatter.title,
         subTitle: node.frontmatter.subTitle,
         date: node.frontmatter.date,

@@ -4,10 +4,13 @@ import { Disqus } from 'gatsby-plugin-disqus'
 import * as tocbot from 'tocbot'
 import { GatsbySeo } from 'gatsby-plugin-next-seo';
 import Layout from '../organisms/layout'
+import BackgroundImage from 'gatsby-background-image'
+import {convertToBgImage} from "gbimage-bridge";
+import {GatsbyImage, getImage} from "gatsby-plugin-image";
 
 
 const Post = ({pageContext}) => {
-  const { url, id, title, subTitle, date, tags, content } = pageContext
+  const { url, id, thumbnail, title, subTitle, date, tags, content } = pageContext
   const disqusConfig = {
     url: url,
     identifier: id,
@@ -48,7 +51,10 @@ const Post = ({pageContext}) => {
       tocbot.destroy()
     }
   },[])
-  
+
+  const image = getImage(thumbnail)
+  const bgImage = convertToBgImage(image)
+
   return (
     <Layout>
       <GatsbySeo
@@ -56,6 +62,13 @@ const Post = ({pageContext}) => {
         description={subTitle}
         canonical={url}
       />
+      <BackgroundImage
+        Tag="section"
+        className="post-cover-image"
+        {...bgImage}
+        preserveStackingContext
+      >
+      </BackgroundImage>
       <h1 className="post-title">{title}</h1>
       <h3 className="post-sub-title">{subTitle}</h3>
       <p className='post-meta'>
