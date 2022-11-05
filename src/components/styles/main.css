@@ -181,6 +181,7 @@ header nav .nav-item a:last-child {
   background-color: #eeeeee;
   height: 1px;
   border: 0;
+  margin: 2em;
 }
 
 .content .post-content table {
