@@ -143,6 +143,7 @@ graph LR
   Operator -- 1. watch --> CR
   Operator -- 2. deploy --> NodeFeatureDiscoveryW
   Operator -- 2. deploy --> NodeFeatureDiscoveryM
+  Operator -- 3. deploy --> GPUFeatureDiscovery
   Operator -- 3. deploy --> NvidiaDriverInstaller
   Operator -- 3. deploy --> NvidiaDevicePlugin
   Operator -- 3. deploy --> NvidiaContainerToolkit
