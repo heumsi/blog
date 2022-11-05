@@ -5,7 +5,7 @@ date: 2022-10-09
 tags:
   - Kubernetes
   - GPU
-thumbnail: ./thumbnail.png
+thumbnail: ./thumbnail.jpeg
 ---
 
 ## 들어가며
