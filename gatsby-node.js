@@ -17,7 +17,7 @@ exports.createPages = async ({actions, graphql, reporter}) => {
                 gatsbyImageData(
                   height: 400
                   placeholder: BLURRED
-                  formats: [AUTO, WEBP, AVIF]
+                  formats: [PNG]
                 )
               }
             }
