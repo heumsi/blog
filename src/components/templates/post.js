@@ -5,8 +5,8 @@ import * as tocbot from 'tocbot'
 import { GatsbySeo } from 'gatsby-plugin-next-seo';
 import Layout from '../organisms/layout'
 import BackgroundImage from 'gatsby-background-image'
-import {convertToBgImage, getSrc} from "gbimage-bridge";
-import {GatsbyImage, getImage} from "gatsby-plugin-image";
+import {convertToBgImage} from "gbimage-bridge";
+import {GatsbyImage, getImage, getSrc, getSrcSet} from "gatsby-plugin-image";
 
 
 const Post = ({pageContext}) => {
