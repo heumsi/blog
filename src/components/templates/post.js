@@ -5,7 +5,7 @@ import * as tocbot from 'tocbot'
 import { GatsbySeo } from 'gatsby-plugin-next-seo';
 import Layout from '../organisms/layout'
 import BackgroundImage from 'gatsby-background-image'
-import {convertToBgImage} from "gbimage-bridge";
+import {convertToBgImage, getSrc} from "gbimage-bridge";
 import {GatsbyImage, getImage} from "gatsby-plugin-image";
 
 
@@ -61,6 +61,18 @@ const Post = ({pageContext}) => {
         title={title}
         description={subTitle}
         canonical={url}
+        openGraph={
+          {
+            url: url,
+            title: title,
+            description: subTitle,
+            images: [
+              {
+                url: getSrc(thumbnail),
+              },
+            ],
+          }
+        }
       />
       <BackgroundImage
         Tag="section"

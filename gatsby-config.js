@@ -7,7 +7,22 @@ module.exports = {
     siteUrl: `https://heumsi.github.io/blog`,
   },
   plugins: [
-    'gatsby-plugin-next-seo',
+    {
+      resolve: 'gatsby-plugin-next-seo',
+      options: {
+        language: "ko",
+        openGraph: {
+          type: 'website',
+          url: 'https://heumsi.github.io/blog',
+          site_name: '하나씩. 점을. 찍어나가며.',
+        },
+        twitter: {
+          handle: '@handle',
+          site: '@site',
+          cardType: 'summary_large_image',
+        },
+      },
+    },
     {
       resolve: `gatsby-plugin-sitemap`,
       options: {
