@@ -61,6 +61,10 @@ const Post = ({pageContext}) => {
         title={title}
         description={subTitle}
         canonical={url}
+        metaTags={[{
+            property: 'keywords',
+            content: tags.toString()
+        }]}
         openGraph={
           {
             url: url,

@@ -3,17 +3,22 @@ module.exports = {
   siteMetadata: {
     title: "하나씩. 점을. 찍어나가며.",
     author: 'Heumsi',
-    description: '소프트웨어 엔지니어 Heumsi의 블로그 입니다.',
+    description: '소프트웨어 엔지니어 흠시의 블로그 입니다.',
     siteUrl: `https://heumsi.github.io/blog`,
   },
   plugins: [
     {
       resolve: 'gatsby-plugin-next-seo',
       options: {
+        title: "하나씩. 점을. 찍어나가며.",
         language: "ko",
+        description: "소프트웨어 엔지니어 흠시의 블로그 입니다.",
+        canonical: "https://heumsi.github.io/blog",
         openGraph: {
-          type: 'website',
           url: 'https://heumsi.github.io/blog',
+          type: 'website',
+          title: '하나씩. 점을. 찍어나가며.',
+          description: "소프트웨어 엔지니어 흠시의 블로그 입니다.",
           site_name: '하나씩. 점을. 찍어나가며.',
         },
         twitter: {
