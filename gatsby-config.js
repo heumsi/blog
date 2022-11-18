@@ -8,6 +8,12 @@ module.exports = {
   },
   plugins: [
     {
+      resolve: `gatsby-plugin-plausible`,
+      options: {
+        domain: `heumsi.github.io/blog`,
+      },
+    },
+    {
       resolve: 'gatsby-plugin-next-seo',
       options: {
         title: "하나씩. 점을. 찍어나가며.",
