@@ -10,6 +10,7 @@ const Layout = ({ children }) => {
   return (
     <div className="container">
         <Helmet>
+          <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
           <script defer data-domain="heumsi.github.io/blog" src="http://heumsi.chickenkiller.com/js/script.js"></script>
         </Helmet>
       <Header/>
