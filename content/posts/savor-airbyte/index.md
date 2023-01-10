@@ -449,7 +449,9 @@ CDC는 주로 `Source: Incremental` 방식과 같이 쓰일 때 이점이 있으
 
 ## 아키텍처
 
-Airbyte의 아키텍처를 그림으로 표현하면 다음과 같다.
+### 컴포넌트와 워크플로우
+
+Airbyte의 아키텍처를 하나의 다이어그램으로 표현하면 다음과 같다.
 
 ![26.png](./26.png)
 *출처: https://airbytehq.github.io/understanding-airbyte/high-level-view*
@@ -475,7 +477,194 @@ Airbyte의 아키텍처를 그림으로 표현하면 다음과 같다.
 - Temporary Storage
   - Worker가 데이터를 뽑아낼 때마다 사용할 수 있는 저장소다.
 
-각 컴포넌트간 의존 관계 및 워크 플로우는 위 그림에 나오는 화살표를 보면 쉽게 알 수 있다.
+각 컴포넌트간 의존 관계 및 워크플로우는 위 그림에 나오는 화살표를 보면 쉽게 알 수 있다.
+
+### Worker와 Job
+
+위 컴포넌트들 중에서 가장 핵심이 되는 항목은 Worker다.
+Worker는 실질적인 ELT 작업을 진행하는 역할을 담당하고 있다.
+
+Worekr는 구체적인 책임에 따라 다음 4가지로 구성되어 있다.
+
+- Spec Worker
+  - Connector에 대한 명세(Specification)를 검색한다.
+- Check Connection Worker
+  - Connector에 대한 입력이 유효하고 Sync하는데 문제 없는지 확인한다.
+- Discovery Worker
+  - Connector의 Source 스키마를 검색한다.
+- Sync Worker
+  - Source와 Destination 간에 Sync를 수행한다.
+
+여기서 Sync에 핵심이 되는 Sync Worker에 대해서 좀 더 알아보자.
+
+Sync가 진행될 때, Sync Worker에서는 다음의 일들이 일어난다.
+
+![31.png](./31.png)
+
+1. Source와 Destionation 관련 도커 컨테이너를 실행시킨다.
+2. Source 컨테이너에서 추출한 메시지를 Destionation 컨테이너로 전달한다.
+3. Source와 Destionation 컨테이너가 할 일을 마치면, 이 둘을 종료시킨다.
+4. 실행 결과를 반환한다.
+
+이 때 Source, Destionation 컨테이너를 Job이라고 부르며, 이 Job들은 이름 그대로 각각 본인과 관련된 일들을 진행한다.
+Source 컨테이너는 Source에서 데이터를 추출하는 일을(Extract), Destination 컨테이너는 입력받은 데이터를 Destination으로 로드하는 일(Load)을 한다.
+
+그리고 Sync 옵션 중 `Normalization` 이 설정되어 있었다면, Normalization 컨테이너도 Worker에 의해 실행된다.
+Normalization 컨테이너는 로드된 데이터(RAW JSON)를 가공하여(Transform) 최종적으로 Destination에 데이터(Normalized)를 저장한다.
+
+예를 들어 위에서 진행한 MySQL -> BigQuery Connection을 Sync하는 경우 Sync worker에서는 다음과 같은 일들이 일어난다.
+
+```mermaid
+flowchart LR
+    subgraph Destination
+        g["GCS (Temp Storage)"]
+        b["BigQuery"]
+    end
+    subgraph Airbyte
+        w["Sync Worker"]
+        s["Source Job"]
+        n["Normalization Job"]
+        d["Destination Job"]
+    end
+    subgraph Source
+        m["MySQL"]
+    end
+    
+    w -- "1. Get Data" --> s
+    s -- "2. Get Data" --> m
+    m -. "3. Data (JSON)" .-> s
+    s -. "4. Data" .-> w 
+    w -- "5. Pass Data" --> d
+    d -- "6. Convert Data (JSON -> Avro)" --> d
+    d -- "7. Upload Data  " --> g
+    d -- "8. Upload Data \n (GCS -> BigQuery)" --> b
+    d -. "9. Result" .-> w
+    w -- "10. Transform Data \n (JSON -> Transformed)" --> n
+    n -- "11. Query to transform" --> b
+    n -. "12. Result" .-> w
+```
+
+데이터 흐름을 중심으로한 내용만 담았다. 
+별도의 설명 없이 다이어그램만으로도 충분히 이해가능하리라 본다.
+더 자세하게 알아보고 싶다면, [이 Sync 로그](https://gist.github.com/heumsi/e07c1e7ecef94eb888a281dace2806e2)를 보자.
+(나도 이 로그를 보고 위 다이어그램을 그렸다.)
+
+> Worker와 Job은 어떤 형태로 실행될까?
+> - 단일 컴퓨팅 환경, 즉 Docker-compose로 배포한 경우에는 Worker와 Job은 컨테이너로 뜬다. 
+> - 분산 컴퓨팅 환경, 즉 Kubernetes에서 배포한 경우는 파드로 뜨게 된다. 쿠버네티스에서의 배포 아키텍처는 [이 페이지](https://airbyte.com/blog/scaling-data-pipelines-kubernetes)에 잘 설명되어 있다.
+
+### Normalization Job
+
+Normalization Job에서는 로드된 데이터를 가지고 Normalized 데이터를 만들기 위해 이런저런 쿼리를 Destination으로 보내게 된다.
+그럼 구체적으로 어떤 쿼리를 보낼까?
+
+보내는 쿼리는 Sync mode에 따라 조금씩 다른데, 어떤 쿼리를 보내는지 간단하게만 살펴보자.
+위에서 진행했던 MySQL -> BigQuery Connection의 경우 Sync mode로 `Source: Full refresh | Dest: Overwrite`을 사용했었다.
+
+BigQuery에 들어가 Query History를 살펴보면 다음과 같이 실행되었던 쿼리가 보인다.
+
+![32.png](./32.png)
+*아래에서 위로의 방향이 시간순이다.*
+
+다음 순으로 실행되었다.
+
+- Query
+- Copy
+- Load
+- Query
+
+여기서 앞에 3개는 Destination Job에서 실행된 쿼리고, 뒤에 마지막 하나가 Normalization Job에서 실행된 쿼리다.
+이 쿼리 내용을 살펴보면 다음과 같다.
+
+```sql
+/* {"app": "dbt", "dbt_version": "1.0.0", "profile_name": "normalize", "target_name": "prod", "node_id": "model.airbyte_utils.table_one"} */
+
+
+  create or replace table `heumsi-playground`.my_database.`table_one`
+  partition by timestamp_trunc(_airbyte_emitted_at, day)
+  cluster by _airbyte_emitted_at
+  OPTIONS()
+  as (
+    
+with __dbt__cte__table_one_ab1 as (
+
+-- SQL model to parse JSON blob stored in a single column and extract into separated field columns as described by the JSON Schema
+-- depends_on: `heumsi-playground`.my_database._airbyte_raw_table_one
+select
+    json_extract_scalar(_airbyte_data, "$['id']") as id,
+    json_extract_scalar(_airbyte_data, "$['name']") as name,
+    json_extract_scalar(_airbyte_data, "$['updated_at']") as updated_at,
+    _airbyte_ab_id,
+    _airbyte_emitted_at,
+    CURRENT_TIMESTAMP() as _airbyte_normalized_at
+from `heumsi-playground`.my_database._airbyte_raw_table_one as table_alias
+-- table_one
+where 1 = 1
+),  __dbt__cte__table_one_ab2 as (
+
+-- SQL model to cast each column to its adequate SQL type converted from the JSON schema type
+-- depends_on: __dbt__cte__table_one_ab1
+select
+    cast(id as 
+    int64
+) as id,
+    cast(name as 
+    string
+) as name,
+    cast(nullif(updated_at, '') as 
+    timestamp
+) as updated_at,
+    _airbyte_ab_id,
+    _airbyte_emitted_at,
+    CURRENT_TIMESTAMP() as _airbyte_normalized_at
+from __dbt__cte__table_one_ab1
+-- table_one
+where 1 = 1
+),  __dbt__cte__table_one_ab3 as (
+
+-- SQL model to build a hash column based on the values of this record
+-- depends_on: __dbt__cte__table_one_ab2
+select
+    to_hex(md5(cast(concat(coalesce(cast(id as 
+    string
+), ''), '-', coalesce(cast(name as 
+    string
+), ''), '-', coalesce(cast(updated_at as 
+    string
+), '')) as 
+    string
+))) as _airbyte_table_one_hashid,
+    tmp.*
+from __dbt__cte__table_one_ab2 tmp
+-- table_one
+where 1 = 1
+)-- Final base SQL model
+-- depends_on: __dbt__cte__table_one_ab3
+select
+    id,
+    name,
+    updated_at,
+    _airbyte_ab_id,
+    _airbyte_emitted_at,
+    CURRENT_TIMESTAMP() as _airbyte_normalized_at,
+    _airbyte_table_one_hashid
+from __dbt__cte__table_one_ab3
+-- table_one from `heumsi-playground`.my_database._airbyte_raw_table_one
+where 1 = 1
+  );
+  
+```
+
+복잡해보이지만, 결국엔 RAW JSON이 로드되어있는 `_airbyte_raw_table_one` 테이블에서 JSON 데이터를 파싱해서 Normalization 한 뒤, 
+최종 테이블인 `table_one`에 저장하는 내용이다.
+
+앞에서도 이야기 했지만, Sync mode에 따라 실행시키는 쿼리는 다양하다.
+`Source: Full refresh | Dest: Overwrite` 의 경우 가장 단순한 Sync mode이므로, 쿼리 역시 간단하게 나오는 것이고,
+CDC + `Source: Incremental + Dest: Deduped + history` 의 경우 꽤 복잡한 Sync mode이므로, 쿼리도 복잡하고 여러 개 나오게 된다.
+
+여하튼 핵심은 Normalization Job에서 이런 쿼리들을 규칙에 맞게 만들고 실행함으로써 Normalized Data를 만들어낸다는 것이다.
+
+Normalization Job에서 SQL을 만들어내고 실행하는 과정이 더 궁금하다면, 이 [페이지](https://airbyte.com/tutorials/full-data-synchronization#step-7)를 참고하자.
 
 ## QnA
 
@@ -497,6 +686,9 @@ Airbyte에서는 이에 대한 기능을 제공해줄까?
 아무래도 Airbyte의 [Low-code Connector에 대한 개념](https://docs.airbyte.com/connector-development/config-based/connector-builder-ui)을 알아야할거 같은데, 
 다른 기능들보다는 배우는데 허들이 좀 있어보인다.
 
+만약 데이터 마스킹이 꼭 필요하다면, 당장은 Destination에서의 데이터 마스킹을 사용하는게 나을 수 있겠다(Destination에서 이 기능을 지원해준다면).
+예를 들면 BigQuery의 경우 [동적 데이터 마스킹 기능](https://cloud.google.com/bigquery/docs/column-data-masking-intro?hl=ko)을 제공한다.
+
 ### RBAC는?
 
 [(아직) 지원하지 않는다.](https://airbytehq.github.io/operator-guides/security/#access-control)
@@ -514,6 +706,7 @@ Cloud 버전의 Airbyte에서는 RBAC는 아니지만 User Management를 지원�
 [이 페이지](https://docs.airbyte.com/operator-guides/collecting-metrics/)에 사용 방법에 대해 다루고 있는데, OpenTelemetry를 사용하면 Prometheus에서 다음과 같은 Metric들을 볼 수 있다.
 
 ![29.png](./29.png)
+*프로메테우스에서 확인한 메트릭* 
 
 제공하는 전체 Metric은 [이 페이지](https://github.com/airbytehq/airbyte/blob/master/airbyte-metrics/metrics-lib/src/main/java/io/airbyte/metrics/lib/OssMetricsRegistry.java)에서 확인할 수 있다.
 
@@ -523,14 +716,105 @@ Cloud 버전의 Airbyte에서는 RBAC는 아니지만 User Management를 지원�
 
 이와 관련해서는 [이 페이지](https://airbytehq.github.io/deploying-airbyte/on-kubernetes/#customizing-airbytes-manifests)를 참고하면 좋을거 같다.
 
-### 워크 플로우 오케스트레이션 툴과 연동할 수 있나?
+### 워크플로우 오케스트레이션 툴과 연동할 수 있나?
 
-Airbyte에서도 Connection의 Sync 실행 주기 설정을 자체적으로도 제공해주지만, [Airflow](https://airflow.apache.org/)나 [Prefect](https://www.prefect.io/), [Dagster](https://dagster.io/)와 같은 워크 플로우 오케스트레이션 툴과도 연동할 수 있는 방법을 공식 문서에서 제공한다.
+Airbyte에서도 Connection의 Sync 실행 주기 설정을 자체적으로도 제공해주지만, [Airflow](https://airflow.apache.org/)나 [Prefect](https://www.prefect.io/), [Dagster](https://dagster.io/)와 같은 워크플로우 오케스트레이션 툴과도 연동할 수 있는 방법을 공식 문서에서 제공한다.
 이와 관련해서는 각 툴마다 다음 페이지를 확인하자.
 
 - [Airflow](https://airbytehq.github.io/operator-guides/using-the-airflow-airbyte-operator/)
 - [Prefect](https://airbytehq.github.io/operator-guides/using-prefect-task)
 - [Dagster](https://airbytehq.github.io/operator-guides/using-dagster-integration)
+
+### 중간에 스키마가 바뀌면 어떻게 되나?
+
+직접 한번 해봤다.
+위에서 작업했던 MySQL Source에 다음처럼 Column을 추가했다.
+
+```sql
+ALTER TABLE table_one ADD COLUMN `value` INIT NOT NULL AFTER `name`;
+```
+
+그리고 수동으로 Sync를 진행했다. 
+그러나 BigQuery Destination에 스키마 변경이 자동으로 반영되지 않았다.
+
+[이 페이지 내용](https://discuss.airbyte.io/t/how-to-reflect-schema-changes-in-destination-for-postgres-to-postgres-cdc/1080)에 따르면,
+스키마 변경 후 Connection의 Replication 탭에서 "Refresh source schema" 버튼을 클릭해야 한다.
+이 버튼을 클릭하면 다음처럼 스키마 변경을 잡아냈다는 결과를 화면에 보여준다.
+
+![33.png](./33.png)
+
+그리고 "Save changes" 버튼을 클릭하면, 다음처럼 Data Reset을 진행하기 위한 컨펌 페이지가 등장한다.
+
+![34.png](./34.png)
+
+"Save connection" 버튼을 누르고, Connection 페이지에 들어가서 확인해보면, 다음처럼 Reset이 진행중인 것을 볼 수 있다.
+
+![35.png](./35.png)
+
+[Reset 로그](https://gist.github.com/heumsi/9de90345a9d3523362f69f237bfd2092)를 보면, Destination Job과 Normalization Job이 실행되고 있는 것을 알 수 있다.
+Destination Job에서 Schema를 변경한 Avro 파일을 GCS에 업로드한 뒤, BigQuery에 이 GCS 파일을 밀어넣고 있고,
+Normalization Job에서는 그 후속 작업을 (이전이랑 동일하게) 진행한다.
+
+Reset 작업이 끝나면 Sync도 자동으로 다시 실행된다.
+그리고 이제 BigQuery에 변경된 스키마로 보이게 된다.
+
+이는 Column 추가뿐 아니라, 수정, 삭제에도 동일했다.
+Sync mode가 `Source: Full refresh | Dest: Overwrite` 인 경우에만 가능한 것인지 모르겠다.
+(나머지 mode에 대해서는 테스트 해보진 않았다.)
+
+정리하면, 스키마 변경 후에는 Connection의 Replication 탭에서 "Refresh source schema" 을 한번 실행시켜야 하고,
+이 때 Data reset과 Sync 작업이 일어나게 된다.
+
+> "Data reset"은 Destination에 있는 모든 데이터를 삭제한다. 
+> 즉 위에서 스키마 변경을 적용하는 작업은, 기존 데이터를 모두 날리고, 새로 데이터를 Sync하는 것과 동일하다.
+> 만약 Destination에 이미 너무 많은 데이터가 있다거나, Source에 이전 데이터가 없다면, 이는 꽤 크리티컬한 문제일 수 있다.
+> "Data reset"에 대한 더 자세한 내용은 [이 페이지](https://docs.airbyte.com/operator-guides/reset)를 확인하자.
+
+한편, 이와 관련하여 "Auto-detect Schema Changes" 와 관련된 이슈가 [Airbyte Roadmap으로 등록되어 있는 걸로 보아](https://github.com/airbytehq/airbyte/issues/12089),
+추후에 더 개선될 것으로 보인다.
+
+### 로드할 데이터가 너무 크면 혹시 OOM이 나나?
+
+Worker의 메모리보다 큰 데이터를 옮길 때, 혹시 OOM이 나지는 않을까?
+Worker의 최대 메모리를 500Mi로 준 뒤, MySQL -> BigQuery로 약 1Gi의 데이터를 Sync 해보았다.
+
+결과적으로 OOM이 나지 않았다.
+Worker 로그를 보니 다음처럼 Source에서 데이터를 나눠서 옮기고 있었다.
+
+```bash
+2023-01-08 07:43:25 source > State report for stream AirbyteStreamNameNamespacePair{name='data_big', namespace='my_database'} - original: null = null (count 0) -> latest: id = 8706354 (count 1)
+2023-01-08 07:43:25 source > State report for stream AirbyteStreamNameNamespacePair{name='data_big', namespace='my_database'} - original: null = null (count 0) -> latest: id = 8706355 (count 1)
+2023-01-08 07:43:25 source > State report for stream AirbyteStreamNameNamespacePair{name='data_big', namespace='my_database'} - original: null = null (count 0) -> latest: id = 8706356 (count 1)
+...
+2023-01-08 07:50:04 source > Closing database connection pool.
+2023-01-08 07:50:04 source > HikariPool-1 - Shutdown initiated...
+2023-01-08 07:50:04 source > HikariPool-1 - Shutdown completed.
+2023-01-08 07:50:04 source > Closed database connection pool.
+2023-01-08 07:50:04 source > Completed integration: io.airbyte.integrations.base.ssh.SshWrappedSource
+2023-01-08 07:50:04 source > completed source: class io.airbyte.integrations.source.mysql.MySqlSource
+...
+2023-01-08 07:50:04 destination > Airbyte message consumer: succeeded.
+2023-01-08 07:50:04 destination > executing on success close procedure.
+2023-01-08 07:50:04 destination > Flushing all 2 current buffers (95 MB in total)
+2023-01-08 07:50:04 destination > Flushing buffer of stream data_big (95 MB)
+2023-01-08 07:50:04 destination > Flushing buffer for stream data_big (95 MB) to staging
+2023-01-08 07:50:04 destination > Finished writing data to 5f36b0ad-5f37-4ba8-803b-4e2d5575a2676478714332736492889.avro (95 MB)
+2023-01-08 07:50:04 destination > Uploading records to staging for stream data_big (dataset my_database): staging/my_database_data_big/2023/01/08/07/7a948bc0-e408-4d95-a8cd-e0663754fe30/
+2023-01-08 07:50:05 destination > Initiated multipart upload to heumsi-playground-airbyte/staging/my_database_data_big/2023/01/08/07/7a948bc0-e408-4d95-a8cd-e0663754fe30/14.avro with full ID ABPnzm4Khnar5YKnSLvzBcnOEV2kQvxFO73UKQPtP5qVRGQypVQpOZZyVcnx4J3N5jLlFqGt
+2023-01-08 07:50:05 destination > Called close() on [MultipartOutputStream for parts 1 - 10000]
+2023-01-08 07:50:19 destination > [Manager uploading to heumsi-playground-airbyte/staging/my_database_data_big/2023/01/08/07/7a948bc0-e408-4d95-a8cd-e0663754fe30/14.avro with id ABPnzm4Kh...N5jLlFqGt]: Finished uploading [Part number 1 containing 10.01 MB]
+2023-01-08 07:50:30 destination > [Manager uploading to heumsi-playground-airbyte/staging/my_database_data_big/2023/01/08/07/7a948bc0-e408-4d95-a8cd-e0663754fe30/14.avro with id ABPnzm4Kh...N5jLlFqGt]: Finished uploading [Part number 10 containing 5.37 MB]
+2023-01-08 07:50:36 destination > [Manager uploading to heumsi-playground-airbyte/staging/my_database_data_big/2023/01/08/07/7a948bc0-e408-4d95-a8cd-e0663754fe30/14.avro with id ABPnzm4Kh...N5jLlFqGt]: Finished uploading [Part number 5 containing 10.01 MB]
+2023-01-08 07:50:38 destination > [Manager uploading to heumsi-playground-airbyte/staging/my_database_data_big/2023/01/08/07/7a948bc0-e408-4d95-a8cd-e0663754fe30/14.avro with id ABPnzm4Kh...N5jLlFqGt]: Finished uploading [Part number 2 containing 10.01 MB]
+...
+```
+
+로드할 데이터를 중간 과정에서 들고있는 GCS를 보니, 다음처럼 200MB 단위로 데이터가 나뉘어 업로드 되어 있는 것을 확인할 수 있었다.
+
+![36.png](./36.png)
+
+약 1Gi 데이터가 2.6Gi가 되어 저장되었다. 
+확실히 RAW JSON 형태(Avro 파일에 담긴)로 데이터를 가공하니, 데이터 사이즈가 커지는 거 같긴하다.
 
 ## 더 읽어보면 좋을거리
 
@@ -602,3 +886,4 @@ Operator를 활용하여 자유롭게 컨트롤할 수 있는 것은 좋았지�
 - https://airbyte.com/tutorials/incremental-change-data-capture-cdc-replication
 - https://airbyte.com/blog/change-data-capture-definition-methods-and-benefits
 - https://airbytehq.github.io/understanding-airbyte/high-level-view/
+- https://airbyte.com/blog/scaling-data-pipelines-kubernetes
