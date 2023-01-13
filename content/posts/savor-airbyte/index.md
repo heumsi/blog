@@ -13,6 +13,9 @@ thumbnail: ./thumbnail.png
 
 쓰고보니 별로 깊이 없는 내용일 가능성이 높으며, 의식의 흐름에 따라 쓰는 경우가 더러 있으므로 이점 양해해서 읽어주시면 되겠습니다 :)
 
+> 이 글을 바탕으로 "수군수군 데이터 엔지니어링 밋업 1회"에서 발표를 진행했습니다.
+> 발표 슬라이드를 보고 싶으신 분은 [이 페이지](https://docs.google.com/presentation/d/1h2-0MetjyYWxsq3TYQL0OusG---X5K_upEGV21EHlkk/edit?usp=sharing)를 참고하시면 됩니다.
+
 ---
 
 ## 들어가며
