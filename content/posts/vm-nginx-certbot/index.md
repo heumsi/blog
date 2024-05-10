@@ -219,7 +219,7 @@ http {
     # HTTP 요청을 HTTPS로 리디렉트
     server {
         listen 80;
-        server_name airflow.my-domains.com uptime.my-domains.com;
+        server_name uptime.my-domains.com;
         return 301 https://$server_name$request_uri;
     }
 }
