@@ -10,7 +10,7 @@ const Layout = ({ children }) => {
   return (
     <div className="container">
         <Helmet>
-          <script defer data-domain="heumsi.github.io/blog" src="https://heumsi.duckdns.org/js/script.js"></script>
+          <script defer src="https://cloud.umami.is/script.js" data-website-id="c247e343-b8cb-4751-8e13-8e8557a94875"></script>
         </Helmet>
       <Header/>
       <Content>
