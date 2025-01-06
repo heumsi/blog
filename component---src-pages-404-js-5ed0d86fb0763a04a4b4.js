@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[883],{210:function(e,t,n){var l=n(7294),r=n(8805);t.Z=function(e){var t=e.title,n=e.children;return l.createElement(r.Z,null,l.createElement("h3",{className:"page-title"},t),n)}},429:function(e,t,n){n.r(t);var l=n(7294),r=n(210);t.default=function(){return l.createElement(r.Z,{title:"404 🥲"},l.createElement("p",null,"존재하지 않는 페이지에요!"))}}}]);
+//# sourceMappingURL=component---src-pages-404-js-5ed0d86fb0763a04a4b4.js.map

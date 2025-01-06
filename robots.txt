@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Sitemap: https://heumsi.github.io/blog/sitemap/sitemap-index.xml
+Host: https://heumsi.github.io

@@ -1,0 +1,420 @@
+<!DOCTYPE html><html lang="ko"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="ie=edge"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><meta data-rh="true" property="keywords" content="Kubernetes,Argo CD,GitOps"/><meta data-rh="true" property="og:image" content="/blog/static/63c1a6754d4dfe0c3d6a2fe0a970d2d1/d6138/thumbnail.png"/><meta data-rh="true" property="og:description" content="Argo CD의 App of Apps 패턴과 ApplicationSet으로 배포하기"/><meta data-rh="true" property="og:title" content="Argo CD에서 App 배포도 GitOps스럽게 하기"/><meta data-rh="true" property="og:url" content="https://heumsi.github.io/blog/posts/argocd-apps-deployment/"/><meta data-rh="true" name="description" content="Argo CD의 App of Apps 패턴과 ApplicationSet으로 배포하기"/><meta data-rh="true" name="googlebot" content="index,follow"/><meta data-rh="true" name="robots" content="index,follow"/><meta data-rh="true" property="og:site_name" content="하나씩. 점을. 찍어나가며."/><meta data-rh="true" property="og:type" content="website"/><meta data-rh="true" name="twitter:creator" content="@handle"/><meta data-rh="true" name="twitter:site" content="@site"/><meta data-rh="true" name="twitter:card" content="summary_large_image"/><meta name="generator" content="Gatsby 4.17.2"/><style data-href="/blog/styles.202b843a3255cda52de9.css" data-identity="gatsby-global-css">/*! minireset.css v0.0.7 | MIT License | github.com/jgthms/minireset.css */blockquote,body,dd,dl,dt,fieldset,figure,h1,h2,h3,h4,h5,h6,hr,html,iframe,legend,li,ol,p,pre,textarea,ul{margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:400}ul{list-style:none}button,input,select{margin:0}html{box-sizing:border-box}*,:after,:before{box-sizing:inherit}img,video{height:auto;max-width:100%}iframe{border:0}table{border-collapse:collapse;border-spacing:0}td,th{padding:0}code[class*=language-],pre[class*=language-]{background:#fafafa;color:#383a42;direction:ltr;font-family:Fira Code,Fira Mono,Menlo,Consolas,DejaVu Sans Mono,monospace;font-size:.95em;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none;line-height:1.5;-moz-tab-size:2;-o-tab-size:2;tab-size:2;text-align:left;white-space:pre;word-break:normal;word-spacing:normal}code[class*=language-] ::-moz-selection,code[class*=language-]::-moz-selection,pre[class*=language-] ::-moz-selection{background:#e5e5e6;color:inherit}code[class*=language-] ::selection,code[class*=language-]::selection,pre[class*=language-] ::selection{background:#e5e5e6;color:inherit}pre[class*=language-]{border-radius:.3em;margin:.5em 0;overflow:auto;padding:1em}:not(pre)>code[class*=language-]{border-radius:.3em;padding:.2em .3em;white-space:normal}.token.cdata,.token.comment,.token.prolog{color:#a0a1a7}.token.doctype,.token.entity,.token.punctuation{color:#383a42}.token.atrule,.token.attr-name,.token.boolean,.token.class-name,.token.constant,.token.number{color:#b76b01}.token.keyword{color:#a626a4}.token.deleted,.token.important,.token.property,.token.symbol,.token.tag{color:#e45649}.token.attr-value,.token.attr-value>.token.punctuation,.token.builtin,.token.char,.token.inserted,.token.regex,.token.selector,.token.string{color:#50a14f}.token.function,.token.operator,.token.variable{color:#4078f2}.token.url{color:#0184bc}.token.attr-value>.token.punctuation.attr-equals,.token.special-attr>.token.attr-value>.token.value.css{color:#383a42}.language-css .token.selector{color:#e45649}.language-css .token.property{color:#383a42}.language-css .token.function,.language-css .token.url>.token.function{color:#0184bc}.language-css .token.url>.token.string.url{color:#50a14f}.language-css .token.atrule .token.rule,.language-css .token.important,.language-javascript .token.operator{color:#a626a4}.language-javascript .token.template-string>.token.interpolation>.token.interpolation-punctuation.punctuation{color:#ca1243}.language-json .token.operator{color:#383a42}.language-json .token.null.keyword{color:#b76b01}.language-markdown .token.url,.language-markdown .token.url-reference.url>.token.string,.language-markdown .token.url>.token.operator{color:#383a42}.language-markdown .token.url>.token.content{color:#4078f2}.language-markdown .token.url-reference.url,.language-markdown .token.url>.token.url{color:#0184bc}.language-markdown .token.blockquote.punctuation,.language-markdown .token.hr.punctuation{color:#a0a1a7;font-style:italic}.language-markdown .token.code-snippet{color:#50a14f}.language-markdown .token.bold .token.content{color:#b76b01}.language-markdown .token.italic .token.content{color:#a626a4}.language-markdown .token.list.punctuation,.language-markdown .token.strike .token.content,.language-markdown .token.strike .token.punctuation,.language-markdown .token.title.important>.token.punctuation{color:#e45649}.token.bold{font-weight:700}.token.comment,.token.italic{font-style:italic}.token.entity{cursor:help}.token.namespace{opacity:.8}.token.token.cr:before,.token.token.lf:before,.token.token.space:before,.token.token.tab:not(:empty):before{color:rgba(56,58,66,.2)}div.code-toolbar>.toolbar.toolbar>.toolbar-item{margin-right:.4em}div.code-toolbar>.toolbar.toolbar>.toolbar-item>a,div.code-toolbar>.toolbar.toolbar>.toolbar-item>button,div.code-toolbar>.toolbar.toolbar>.toolbar-item>span{background:#e5e5e6;border-radius:.3em;color:#696c77;padding:.1em .4em}div.code-toolbar>.toolbar.toolbar>.toolbar-item>a:focus,div.code-toolbar>.toolbar.toolbar>.toolbar-item>a:hover,div.code-toolbar>.toolbar.toolbar>.toolbar-item>button:focus,div.code-toolbar>.toolbar.toolbar>.toolbar-item>button:hover,div.code-toolbar>.toolbar.toolbar>.toolbar-item>span:focus,div.code-toolbar>.toolbar.toolbar>.toolbar-item>span:hover{background:#c6c7c7;color:#383a42}.line-highlight.line-highlight{background:rgba(56,58,66,.05)}.line-highlight.line-highlight:before,.line-highlight.line-highlight[data-end]:after{background:#e5e5e6;border-radius:.3em;box-shadow:0 2px 0 0 rgba(0,0,0,.2);color:#383a42;padding:.1em .6em}pre[id].linkable-line-numbers.linkable-line-numbers span.line-numbers-rows>span:hover:before{background-color:rgba(56,58,66,.05)}.command-line .command-line-prompt,.line-numbers.line-numbers .line-numbers-rows{border-right-color:rgba(56,58,66,.2)}.command-line .command-line-prompt>span:before,.line-numbers .line-numbers-rows>span:before{color:#9d9d9f}.rainbow-braces .token.token.punctuation.brace-level-1,.rainbow-braces .token.token.punctuation.brace-level-5,.rainbow-braces .token.token.punctuation.brace-level-9{color:#e45649}.rainbow-braces .token.token.punctuation.brace-level-10,.rainbow-braces .token.token.punctuation.brace-level-2,.rainbow-braces .token.token.punctuation.brace-level-6{color:#50a14f}.rainbow-braces .token.token.punctuation.brace-level-11,.rainbow-braces .token.token.punctuation.brace-level-3,.rainbow-braces .token.token.punctuation.brace-level-7{color:#4078f2}.rainbow-braces .token.token.punctuation.brace-level-12,.rainbow-braces .token.token.punctuation.brace-level-4,.rainbow-braces .token.token.punctuation.brace-level-8{color:#a626a4}pre.diff-highlight>code .token.token.deleted:not(.prefix),pre>code.diff-highlight .token.token.deleted:not(.prefix){background-color:rgba(255,82,102,.15)}pre.diff-highlight>code .token.token.deleted:not(.prefix) ::-moz-selection,pre.diff-highlight>code .token.token.deleted:not(.prefix)::-moz-selection,pre>code.diff-highlight .token.token.deleted:not(.prefix) ::-moz-selection,pre>code.diff-highlight .token.token.deleted:not(.prefix)::-moz-selection{background-color:rgba(251,86,105,.25)}pre.diff-highlight>code .token.token.deleted:not(.prefix) ::selection,pre.diff-highlight>code .token.token.deleted:not(.prefix)::selection,pre>code.diff-highlight .token.token.deleted:not(.prefix) ::selection,pre>code.diff-highlight .token.token.deleted:not(.prefix)::selection{background-color:rgba(251,86,105,.25)}pre.diff-highlight>code .token.token.inserted:not(.prefix),pre>code.diff-highlight .token.token.inserted:not(.prefix){background-color:rgba(25,255,91,.15)}pre.diff-highlight>code .token.token.inserted:not(.prefix) ::-moz-selection,pre.diff-highlight>code .token.token.inserted:not(.prefix)::-moz-selection,pre>code.diff-highlight .token.token.inserted:not(.prefix) ::-moz-selection,pre>code.diff-highlight .token.token.inserted:not(.prefix)::-moz-selection{background-color:rgba(56,224,98,.25)}pre.diff-highlight>code .token.token.inserted:not(.prefix) ::selection,pre.diff-highlight>code .token.token.inserted:not(.prefix)::selection,pre>code.diff-highlight .token.token.inserted:not(.prefix) ::selection,pre>code.diff-highlight .token.token.inserted:not(.prefix)::selection{background-color:rgba(56,224,98,.25)}.prism-previewer-gradient.prism-previewer-gradient div,.prism-previewer.prism-previewer:before{border-color:hsl(0,0,95%)}.prism-previewer-color.prism-previewer-color:before,.prism-previewer-easing.prism-previewer-easing:before,.prism-previewer-gradient.prism-previewer-gradient div{border-radius:.3em}.prism-previewer.prism-previewer:after{border-top-color:hsl(0,0,95%)}.prism-previewer-flipped.prism-previewer-flipped.after{border-bottom-color:hsl(0,0,95%)}.prism-previewer-angle.prism-previewer-angle:before,.prism-previewer-easing.prism-previewer-easing,.prism-previewer-time.prism-previewer-time:before{background:#fff}.prism-previewer-angle.prism-previewer-angle circle,.prism-previewer-time.prism-previewer-time circle{stroke:#383a42;stroke-opacity:1}.prism-previewer-easing.prism-previewer-easing circle,.prism-previewer-easing.prism-previewer-easing line,.prism-previewer-easing.prism-previewer-easing path{stroke:#383a42}.prism-previewer-easing.prism-previewer-easing circle{fill:transparent}.gatsby-highlight-code-line{background-color:#eee;display:block;margin-left:-1em;margin-right:-1em;padding-left:1em;padding-right:1em}.gatsby-highlight{background:#fafafa;margin:0 0 1em;overflow:auto;padding:1em}.gatsby-highlight pre[class*=language-]{background-color:transparent;float:left;margin:0;min-width:100%;overflow:initial;padding:0}.toc{overflow-y:auto}.toc>.toc-list{overflow:hidden;position:relative}.toc>.toc-list li{list-style:none}.toc-list{margin:0;padding-left:10px}a.toc-link{color:currentColor;height:100%}.is-collapsible{max-height:1000px;overflow:hidden;transition:all .3s ease-in-out}.is-collapsed{max-height:0}.is-position-fixed{position:fixed!important;top:0}.is-active-link{font-weight:700}.toc-link:before{background-color:#eee;content:" ";display:inline-block;height:inherit;left:0;margin-top:-1px;position:absolute;width:2px}.is-active-link:before{background-color:#54bc4b}.toc{color:#333;font-size:.8em;left:0;line-height:1.8em;max-width:20rem;padding-left:1rem;position:fixed;top:50vh;transform:translateY(-50%);transition:all .4s cubic-bezier(.25,.8,.4,.95);visibility:visible;width:100%}.toc-list-item{font-weight:300}.is-active-link{font-weight:400}.toc-hidden{transform:translate(-100%,-50%);visibility:hidden}.toc-link:before{background-color:inherit}@media only screen and (max-width:85rem){.toc{visibility:hidden}}*{color:inherit;text-decoration:none}body{-ms-text-size-adjust:100%;-moz-text-size-adjust:100%;-webkit-text-size-adjust:100%;color:#333;font-size:1rem;word-break:break-all}h1{font-size:2.441em}h1,h2{font-weight:700}h2{font-size:1.953em}h3{font-size:1.563em}h3,h4{font-weight:700}h4{font-size:1.25em}li,p{font-size:1em;font-weight:400;line-height:1.8em}a{cursor:pointer}.container{font-family:sans-serif;margin:auto;max-width:45rem;width:100%}header{align-items:center;display:flex;justify-content:space-between;margin:1.5rem 0 1rem}header .site-title{font-weight:700;margin:0;transition:.33s}header .site-title:hover{color:#344cb7}header nav{display:flex;font-weight:400}header nav .nav-item a{padding-right:1.5rem;transition:.33s}header nav .nav-item a:hover{color:#344cb7}header nav .nav-item a:last-child{padding-right:0}.content .page-title{font-weight:500}.content .post-item{align-items:center;list-style:none;margin:2rem 0;transition:.33s}.content .post-item:hover{color:#344cb7}.content .post-item a{text-decoration:none}.content .post-item article{display:flex}.content .post-item-thumbnail{height:7rem;width:7rem}.content .post-item-desc{display:flex;flex-direction:column;height:7rem;margin-left:1.5rem}.content .post-item-title{font-weight:400;margin-top:0}.content .post-item-sub-title{line-height:1.4em;margin-top:.5rem}.content .post-item-meta{color:#666;font-size:.9em;line-height:1em;margin:auto 0 0}.content .post-cover-image{height:400px;left:50%;margin-bottom:2rem;margin-left:-50vw;margin-right:-50vw;max-width:100vw;position:relative;right:50%;width:100vw}.content .post-sub-title{color:#666;font-weight:400;margin-top:1rem}.content .post-meta{color:#666;display:block;margin-top:.5rem}.content .post-content{margin:3rem 0 5rem}.content .log-content{margin-top:1rem}.content .post-content h2,h3,h4{margin-top:2em}.content .post-content p{margin:1em 0}.content .post-content hr{background-color:#eee;border:0;height:1px;margin:2em}.content .post-content table{overflow-x:auto;width:100%}.content .post-content table th{background-color:#fafafa}.content .post-content table th,td{border:1px solid #ccc;padding:.5em}.content .log-content a,.content .post-content a{text-decoration:underline}.content .post-content>ul{margin:1em 0}.content .log-content ul li,.content .post-content ul li{list-style:outside;margin-left:1em}.content .log-content ul li p,.content .post-content ul li p{margin:0}.content .log-content ol li,.content .post-content ol li{margin-left:1em}.content .post-content .gatsby-resp-image-wrapper{margin:2em 0}.content .log-content .gatsby-resp-image-wrapper{margin:1em 0;margin-left:0!important;margin-right:0!important;max-width:100%!important}.content .log-content .gatsby-resp-image-wrapper+em,.content .post-content .gatsby-resp-image-wrapper+em{color:#999;display:block;font-size:.9em;font-style:normal;line-height:1.5em;margin:-1.5em auto 2em;max-width:90%;text-align:center}.content .log-content blockquote,.content .post-content blockquote{background:#f6f6f6;border-left:4px solid #e6e6e6;color:#666;margin:1rem 0;padding:1rem}.content .log-content blockquote code,.content .post-content blockquote code{color:#666}.content .log-content blockquote ol,.content .log-content blockquote p,.content .log-content blockquote ul,.content .post-content blockquote ol,.content .post-content blockquote p,.content .post-content blockquote ul{margin:1em 0}.content .log-content blockquote p:first-child,.content .log-content blockquote p:last-child,.content .post-content blockquote p:first-child,.content .post-content blockquote p:last-child{margin:0}.content .post-content .mermaid{margin:0 auto;width:-webkit-fit-content;width:-moz-fit-content;width:fit-content}.content .log-item{line-height:1.8em;margin:2rem 0}.content .log-title span{cursor:pointer;font-size:.6em;margin-left:.6em;opacity:.6;transition:.33s}.content .log-title span:hover{opacity:1}.content .log-content a{text-decoration:underline}.content .log-datetime{color:#666;font-size:.9em}footer{align-items:center;color:#666;display:flex;justify-content:space-between;margin:3rem 0}footer .external-links li{display:inline-block;margin:0 .5rem;transition:.33s}footer .external-links li:hover{color:#344cb7}footer .copy-right{font-size:.9rem;text-align:right}@media screen and (max-width:800px){html{font-size:1rem}h1{font-size:1.749em}h1,h2{font-weight:700}h2{font-size:1.521em}h3{font-size:1.322em}h3,h4{font-weight:700}h4{font-size:1.15em}.container{padding:0 1rem}header .site-title{font-size:1rem}header nav .nav-item a{padding-right:1rem}.content .post-list .post-item{border-bottom:1px solid #ccc;margin:0 -1rem;padding:1rem}.content .post-list .post-item:last-child{border-bottom:none}.content .post-list .post-item a{text-decoration:none}.content .post-cover-image{margin-bottom:1.5rem}.content .page-title{font-size:1rem}.content .post-item-title{font-size:1.2rem}.content .post-item-thumbnail{display:none!important}.content .post-item-desc{height:-webkit-fit-content;height:-moz-fit-content;height:fit-content;margin-left:0}.content .post-item-meta{line-height:1.4em}footer{margin:1rem 0}}</style><link rel="preconnect" href="https://plausible.io"/><script async="" defer="" data-domain="heumsi.github.io/blog" src="https://plausible.io/js/plausible.js"></script><script>
+          window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) };
+          
+          </script><title data-rh="true">Argo CD에서 App 배포도 GitOps스럽게 하기</title><link data-rh="true" rel="canonical" href="https://heumsi.github.io/blog/posts/argocd-apps-deployment/"/><script data-rh="true" defer="" src="https://cloud.umami.is/script.js" data-website-id="c247e343-b8cb-4751-8e13-8e8557a94875"></script><link rel="sitemap" type="application/xml" href="/blog/sitemap/sitemap-index.xml"/><link rel="alternate" type="application/rss+xml" title="하나씩 점을 찍어나가며 - Heumsi의 블로그 RSS" href="/blog/rss.xml"/><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-ZRH97WV1XY"></script><script>
+    window.GATSBY_GTAG_PLUGIN_GA_TRACKING_ID = (
+      'G-ZRH97WV1XY'
+    );
+    window.GATSBY_GTAG_PLUGIN_ANONYMIZE = false;
+
+    var options = {
+      send_page_view: false
+    };
+    if (false) {
+      options.anonymize_ip = true;
+    }
+
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    window.gtag = gtag;
+    gtag('js', new Date());
+    gtag('config', 'G-ZRH97WV1XY', options);
+  </script><style>.gatsby-image-wrapper{position:relative;overflow:hidden}.gatsby-image-wrapper picture.object-fit-polyfill{position:static!important}.gatsby-image-wrapper img{bottom:0;height:100%;left:0;margin:0;max-width:none;padding:0;position:absolute;right:0;top:0;width:100%;object-fit:cover}.gatsby-image-wrapper [data-main-image]{opacity:0;transform:translateZ(0);transition:opacity .25s linear;will-change:opacity}.gatsby-image-wrapper-constrained{display:inline-block;vertical-align:top}</style><noscript><style>.gatsby-image-wrapper noscript [data-main-image]{opacity:1!important}.gatsby-image-wrapper [data-placeholder-image]{opacity:0!important}</style></noscript><script type="module">const e="undefined"!=typeof HTMLImageElement&&"loading"in HTMLImageElement.prototype;e&&document.body.addEventListener("load",(function(e){const t=e.target;if(void 0===t.dataset.mainImage)return;if(void 0===t.dataset.gatsbyImageSsr)return;let a=null,n=t;for(;null===a&&n;)void 0!==n.parentNode.dataset.gatsbyImageWrapper&&(a=n.parentNode),n=n.parentNode;const o=a.querySelector("[data-placeholder-image]"),r=new Image;r.src=t.currentSrc,r.decode().catch((()=>{})).then((()=>{t.style.opacity=1,o&&(o.style.opacity=0,o.style.transition="opacity 500ms linear")}))}),!0);</script><style type="text/css">
+    .anchor.before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: translateX(-100%);
+      padding-right: 4px;
+    }
+    .anchor.after {
+      display: inline-block;
+      padding-left: 4px;
+    }
+    h1 .anchor svg,
+    h2 .anchor svg,
+    h3 .anchor svg,
+    h4 .anchor svg,
+    h5 .anchor svg,
+    h6 .anchor svg {
+      visibility: hidden;
+    }
+    h1:hover .anchor svg,
+    h2:hover .anchor svg,
+    h3:hover .anchor svg,
+    h4:hover .anchor svg,
+    h5:hover .anchor svg,
+    h6:hover .anchor svg,
+    h1 .anchor:focus svg,
+    h2 .anchor:focus svg,
+    h3 .anchor:focus svg,
+    h4 .anchor:focus svg,
+    h5 .anchor:focus svg,
+    h6 .anchor:focus svg {
+      visibility: visible;
+    }
+  </style><script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+      var hash = window.decodeURI(location.hash.replace('#', ''))
+      if (hash !== '') {
+        var element = document.getElementById(hash)
+        if (element) {
+          var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+          var clientTop = document.documentElement.clientTop || document.body.clientTop || 0
+          var offset = element.getBoundingClientRect().top + scrollTop - clientTop
+          // Wait for the browser to finish rendering before scrolling.
+          setTimeout((function() {
+            window.scrollTo(0, offset - 0)
+          }), 0)
+        }
+      }
+    })
+  </script></head><body><div id="___gatsby"><div style="outline:none" tabindex="-1" id="gatsby-focus-wrapper"><div class="container"><header><h3 class="site-title"><a href="/blog/">하나씩. 점을. 찍어나가며.</a></h3><nav><ul><li class="nav-item"><a class="nav-link-text" href="/blog/posts">글</a><a class="nav-link-text" href="/blog/logs">로그</a></li></ul></nav></header><main class="content"><section class="post-cover-image gbi--1869992139-kKgKfovcfKjCCyPzpBUmuv" style="background-position:center;background-repeat:no-repeat;background-size:cover;position:relative"><style>
+          .post-cover-image.gbi--1869992139-kKgKfovcfKjCCyPzpBUmuv:before,
+          .post-cover-image.gbi--1869992139-kKgKfovcfKjCCyPzpBUmuv:after {
+            content: '';
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            
+            transition: opacity 0.5s ease 250ms;
+            background-position: center;
+background-repeat: no-repeat;
+background-size: cover;
+
+          }
+          .post-cover-image.gbi--1869992139-kKgKfovcfKjCCyPzpBUmuv:before {
+            z-index: -100;
+            
+            
+            opacity: 1; 
+          }
+          .post-cover-image.gbi--1869992139-kKgKfovcfKjCCyPzpBUmuv:after {
+            z-index: -101;
+            
+            
+            
+          }
+        </style><noscript><style>
+    .post-cover-image.gbi--1869992139-kKgKfovcfKjCCyPzpBUmuv:before {
+      opacity: 1;
+      background-image: url('/blog/static/63c1a6754d4dfe0c3d6a2fe0a970d2d1/d6138/thumbnail.png');
+    }</style></noscript></section><h1 class="post-title">Argo CD에서 App 배포도 GitOps스럽게 하기</h1><h3 class="post-sub-title">Argo CD의 App of Apps 패턴과 ApplicationSet으로 배포하기</h3><p class="post-meta"><span>2022년 7월 24일</span> — <span>Kubernetes<!-- -->, <!-- -->Argo CD<!-- -->, <!-- -->GitOps</span></p><div class="toc toc-hidden"></div><div class="post-content"><h2 id="들어가며" style="position:relative"><a href="#%EB%93%A4%EC%96%B4%EA%B0%80%EB%A9%B0" aria-label="들어가며 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>들어가며</h2><p>Argo CD는 내게 GitOps와 Single Source of Truth의 개념을 알려준 매우 멋진 도구다.
+여기서 배운 GitOps를 나는 App 배포 뿐 아니라 팀의 문서나 모든 Desired 한 상태 관리에 쓰면 어떨까라고 생각했으니,
+Kubernetes의 선언적 배포 개념을 알게 된 이후, Argo CD는 일하는 방식에 대해 내게 정말 큰 임팩트를 준거같다.</p><p>이번 글에서는 Argo CD를 통해 GitOps로 App을 배포하는 다음 두가지 방법에 대해 적어본다.</p><ul><li>App of Apps 패턴</li><li>ApplicationSet</li></ul><p>Argo CD에 대한 기본적인 설명은 이 글에서 다루지 않는다.
+Argo CD에 대해 이미 알고있으며, 이를 좀 더 잘 사용하고 싶은 분들을 대상으로 글을 적어본다.</p><blockquote><p>만약 Argo CD가 처음이고 관심이 있다면, <a href="https://coffeewhale.com/kubernetes/gitops/argocd/2020/02/10/gitops-argocd/">커피고래님의 블로그 글</a>을 읽어보기를 추천한다.
+Argo CD가 무엇이고 기본적으로 어떻게 사용하는지 아주 잘 나와있다. </p></blockquote><h2 id="web-ui-배포의-문제" style="position:relative"><a href="#web-ui-%EB%B0%B0%ED%8F%AC%EC%9D%98-%EB%AC%B8%EC%A0%9C" aria-label="web ui 배포의 문제 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Web UI 배포의 문제</h2><p>먼저 Argo CD에서 Web UI를 통해 App을 배포하는 과정을 리뷰해보자.</p><p>Argo CD를 배포하면 다음과 같은 Web UI를 이용할 수 있다.</p><p><span class="gatsby-resp-image-wrapper" style="position:relative;display:block;margin-left:auto;margin-right:auto;max-width:590px">
+      <span class="gatsby-resp-image-background-image" style="padding-bottom:63.51351351351351%;position:relative;bottom:0;left:0;background-image:url(&#x27;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB4UlEQVQ4y52RTW8SQRjH52TUpGmiiWn8AKLfyojG9NoaPUj8ALVVuu7LsBQ1Jh6MGl9unu1JY41CW2BZdpd9Y0sBMWi2LLt/M7DbgOWgHH6ZJ5mZ3zz/Z8jCwqnM0oVzmYtL5zNnz5zOEEL+l7uEkHuEkFVCyCK5kb4KmVLkcxSiJIHjOEiSNIJSCkEQ4lqCwPMQhBiehxjvPdjksLa+gevpa1eIINJIsQ8H36r6oFhrBDXLC/wIgR8iABB0+n7gD8f1LELgyAein0fD9us37y6RtSwHr/c7UsxmpNoHqFkeKoZ7zL5u48ueiq9lDWXdmUWomE0UFb2XFeUUofnHcDr9YyGj7rRGq+a0UFJNFBUD3xUD7CLb+4tQcw+xr5k9QS6kCE9luD9+RTXLi5JDiZQdrLLXaw3sadaUaOLhsbBu9vhcIUU4kcbC6Q4rDRdl3WZRsL1TwqdiJY5oj8aSSE8IRXkLbnfc4aSQXWL1rmriw8fP2N7ZRTLjybGcEOYKT+B2+zMjJ7ENrw292f63yFtPn7FPCePI8zAtfP7iJZxuP1Dtg2Hdac1DwLova1Z39Muv3r6H7nVQMRxUG+5csLmWFH3ASfnLZPX2nZWHAl1Z3+TnZoMTbt3PPlpO31xe/APBKCyyXpDhEAAAAABJRU5ErkJggg==&#x27;);background-size:cover;display:block"></span>
+  <img class="gatsby-resp-image-image" alt="1.png" title="1.png" src="/blog/static/1bf37bb86e4f6ef019049db7ac9cb89d/fcda8/1.png" srcSet="/blog/static/1bf37bb86e4f6ef019049db7ac9cb89d/12f09/1.png 148w,/blog/static/1bf37bb86e4f6ef019049db7ac9cb89d/e4a3f/1.png 295w,/blog/static/1bf37bb86e4f6ef019049db7ac9cb89d/fcda8/1.png 590w,/blog/static/1bf37bb86e4f6ef019049db7ac9cb89d/efc66/1.png 885w,/blog/static/1bf37bb86e4f6ef019049db7ac9cb89d/c83ae/1.png 1180w,/blog/static/1bf37bb86e4f6ef019049db7ac9cb89d/fa60d/1.png 1792w" sizes="(max-width: 590px) 100vw, 590px" style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0" loading="lazy" decoding="async"/>
+    </span></p><p>Argo CD를 처음 접하게 되면, 보통은 다음처럼 이 Web UI를 통해서 App을 배포하게 된다. </p><p><span class="gatsby-resp-image-wrapper" style="position:relative;display:block;margin-left:auto;margin-right:auto;max-width:590px">
+      <span class="gatsby-resp-image-background-image" style="padding-bottom:63.51351351351351%;position:relative;bottom:0;left:0;background-image:url(&#x27;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAACB0lEQVQ4y5WRy27TQBSG5wGASLBCCAlYEHgTJMQCdYVASIB6yaWIOimXxmXFhkvaJM2idVzHSQuCwhoIbdL0YVCBKgVfYscz4/mRXUekINp0pG8xZ+Z8c84ZcurkMfnc2dPyhfNn5NiJ4zIh5KjkCCFPCSEZQkiMXLt6BdOZDLLSFHLyLLIzs3j2Mo+5YglzheKB5OcLIYViCS9e5XHj5q3LZHwiIZb01/T5/AJttLYYgKPibXdM8XVnt7O+sXGR3Bkdw+raB1FWVNFoboJSBq/XA+cMjDHwQ2CM+YZpYfv7D6NaX4mT5OR91N+uiYWlimi02qEwEPm+Pyw+ANh211A0PU7GkymsvHv/R8g4KKUQQgxLKDRMy1CrtTgZSyRDYVmpiM+tNr6ZApbdDV8PEv5X2cBZKDStSJhIp1GPhJ+abfzyAMYoonuHrn6FpmUblaoeJ6lwhkHLatiyRxnsrgPOeT8BIkoO5uu4PTA2cPa3cPLBVPApfjRD4XlUGKYlHNcVnHMxuII9ZUxw3x8M783QsoxK0HLm4aNAyMqKyr9sbnFfCO5zGpQQ2PYRxPoMxFlYoW3/VPV6nDzOydBW36C0qODjehM9j8J2XDjuv3Qj9sUcFz3Pw05nlypa9RK5PjIijSaS0u2796TpJzOSuqxJmqZJuq4PRVXXpVqtlq2oy4mJVDr2G55cOWCpCfLdAAAAAElFTkSuQmCC&#x27;);background-size:cover;display:block"></span>
+  <img class="gatsby-resp-image-image" alt="2.png" title="2.png" src="/blog/static/9d42c025252882c1073724472fe9cae1/fcda8/2.png" srcSet="/blog/static/9d42c025252882c1073724472fe9cae1/12f09/2.png 148w,/blog/static/9d42c025252882c1073724472fe9cae1/e4a3f/2.png 295w,/blog/static/9d42c025252882c1073724472fe9cae1/fcda8/2.png 590w,/blog/static/9d42c025252882c1073724472fe9cae1/efc66/2.png 885w,/blog/static/9d42c025252882c1073724472fe9cae1/c83ae/2.png 1180w,/blog/static/9d42c025252882c1073724472fe9cae1/fa60d/2.png 1792w" sizes="(max-width: 590px) 100vw, 590px" style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0" loading="lazy" decoding="async"/>
+    </span></p><p>쉽고 간편하다.</p><p>하지만 이렇게 App을 배포하는건 문제가 하나 있는데, 바로 App을 배포하는 과정이 GitOps 스럽지 않다는 것이다.
+좀 더 구체적으로는 다음과 같은 문제가 있다.</p><ul><li>App을 배포하는 과정이 Git에 남지않고 암묵적이다. </li><li>다른 팀원들은 내가 클러스터에 어떤 App을 배포하는지 커밋 내역으로 알 수 없다.</li><li>현재 클러스터의 App 배포 상태를 재현할 수 있는 소스나 코드가 없다.</li><li>만약 클러스터를 새로 만들어, 이전 클러스터의 모든 App을 다 옮겨가야한다고 하자. 일일이 Web UI에서 버튼을 누르며 App을 다시 배포해야할까?</li></ul><p>여하튼 이런 문제의식으로 등장한 대안이 다음 두 방법이다.</p><ul><li>App of Apps 패턴을 통한 배포</li><li>ApplicationSet 리소스를 통한 배포</li></ul><p>두 방법 모두 Web UI를 사용하여 App을 배포하지 않는다. 모두 yaml 파일을 먼저 작성하고, Git 커밋을 남기며 선언적으로 배포한다.
+Web UI는 단순히 앱 배포 상태에 대한 Viewer의 역할만 하게된다.</p><p>이제 이 두 방법을 하나씩 알아볼 것이다.</p><blockquote><p>GitOps를 들여다보면, 소프트웨어 아키텍처에서 종종 등장하는 Command와 Query 분리하는 방법론(CQRS)이 떠오른다.
+GitOps에서는 상태 변화를 주는 모든 Command는 Git 커밋으로 진행되어야 한다.
+그리고 상태를 조회하는 모든 Query는 이 Git Repository를 Source로 이뤄져야 한다.</p><p>Command와 Query를 명확히 분리하면서 시스템은 좀 더 복잡해지긴 하지만, 유즈케이스는 좀 더 명확해지고,
+컴포넌트가 좀 더 디커플링 되면서 전체적으로 더 유연하고 다양한 변화가 가능한 방식이라는 생각이 든다.</p></blockquote><h2 id="application-custom-resource" style="position:relative"><a href="#application-custom-resource" aria-label="application custom resource permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Application Custom Resource</h2><p>우리가 Argo CD로 App을 배포하면 Application이라고 하는 CR(Custom Resource)을 만들게 된다.</p><p>직접 확인해보자. Argo CD Web UI에서 다음처럼 nginx를 배포한다.</p><p><span class="gatsby-resp-image-wrapper" style="position:relative;display:block;margin-left:auto;margin-right:auto;max-width:590px">
+      <span class="gatsby-resp-image-background-image" style="padding-bottom:63.51351351351351%;position:relative;bottom:0;left:0;background-image:url(&#x27;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAACCklEQVQ4y5WRTU8TQRzGJyGePBDrTWOCF6vfxBgvhpPRmKgB+oaBLfjGghej0Ujf6EG2y3Zb0Ch6NiC0VL+LUSTU7Et3tzOz85hdWltD0DLJb2fzn5nfPPtfEomclEfOnZHPj5yVT0dOySeGhmRCyHGYI4QsEELShJBhcvXKZcym05iZnsL8whPMP32OZ5ksMvkCMrn8P1nM5kJy+QJevlrE9Rs3L5FYLC6W9Tf0RXaJbta/MgDHpf2jaYpve839re3tC+T22DjW1j+KoqKKjdoOKKVoex44Z2CMgR8B682+YVr4vvvTKFdXoyQxeQ/Vd+tiabkkNusNUHqw2ff9QfEBwLZbhqLpUTKRSGL1/YeekPEwpRBiUEKhYVqGWq5EyXg8EQqLSkls1BvYNQUsuxXeHhw4KlnfWig0rY4wnkqh2hXWGnAYwBhFZ99/RzehadlGqaxHSTLsYS+h4XC0HAec+90DwRPBZDocjuuBMf5n7ZBwcmo6+Cl+p4fC8agwTUu0XFdwzkX/oIwLypjgvt9fPuihZRml4JPT9x8EQlZUVP5550tg4D6nQYTwvZ+g1qWvzsKEtv1L1atR8nBOhrb2FoXXCj5t1eC1KWzHheMeptXhr5rjwmu3sbffpIpWvkiujY5KY/GEdOvOXWn20WNJXdEkTdMkXdcHoqzrUqVSmSmpK/FYMjX8G23rOYpu3K88AAAAAElFTkSuQmCC&#x27;);background-size:cover;display:block"></span>
+  <img class="gatsby-resp-image-image" alt="3.png" title="3.png" src="/blog/static/0a2fcabf88c2bfa73741dbac833a153e/fcda8/3.png" srcSet="/blog/static/0a2fcabf88c2bfa73741dbac833a153e/12f09/3.png 148w,/blog/static/0a2fcabf88c2bfa73741dbac833a153e/e4a3f/3.png 295w,/blog/static/0a2fcabf88c2bfa73741dbac833a153e/fcda8/3.png 590w,/blog/static/0a2fcabf88c2bfa73741dbac833a153e/efc66/3.png 885w,/blog/static/0a2fcabf88c2bfa73741dbac833a153e/c83ae/3.png 1180w,/blog/static/0a2fcabf88c2bfa73741dbac833a153e/fa60d/3.png 1792w" sizes="(max-width: 590px) 100vw, 590px" style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0" loading="lazy" decoding="async"/>
+    </span></p><p>그리고 Argo CD가 배포된 Namespace에서 Application 리소스를 조회해본다.</p><div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ kubectl get applications
+
+NAME    SYNC STATUS   HEALTH STATUS
+nginx   Synced        Healthy</code></pre></div><p><code class="language-text">nginx</code> 라는 이름의 Application 리소스가 생성되어 있다.</p><p>어떻게 생겼는지 한번 살펴보자.</p><div class="gatsby-highlight" data-language="yaml"><pre class="language-yaml"><code class="language-yaml">$ kubectl get applications nginx <span class="token punctuation">-</span>o yaml
+
+<span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> argoproj.io/v1alpha1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> Application
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">creationTimestamp</span><span class="token punctuation">:</span> <span class="token string">&quot;2022-07-20T14:50:01Z&quot;</span>
+  <span class="token key atrule">finalizers</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> resources<span class="token punctuation">-</span>finalizer.argocd.argoproj.io
+  <span class="token key atrule">generation</span><span class="token punctuation">:</span> <span class="token number">268</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> nginx
+  <span class="token key atrule">namespace</span><span class="token punctuation">:</span> argocd
+  <span class="token key atrule">resourceVersion</span><span class="token punctuation">:</span> <span class="token string">&quot;419286&quot;</span>
+  <span class="token key atrule">uid</span><span class="token punctuation">:</span> fd68a5d8<span class="token punctuation">-</span>0b25<span class="token punctuation">-</span>44e8<span class="token punctuation">-</span>876a<span class="token punctuation">-</span>78dbe17ee617
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token key atrule">destination</span><span class="token punctuation">:</span>
+    <span class="token key atrule">namespace</span><span class="token punctuation">:</span> nginx
+    <span class="token key atrule">server</span><span class="token punctuation">:</span> https<span class="token punctuation">:</span>//kubernetes.default.svc
+  <span class="token key atrule">project</span><span class="token punctuation">:</span> default
+  <span class="token key atrule">source</span><span class="token punctuation">:</span>
+    <span class="token key atrule">path</span><span class="token punctuation">:</span> nginx
+    <span class="token key atrule">repoURL</span><span class="token punctuation">:</span> https<span class="token punctuation">:</span>//github.com/heumsi/helm<span class="token punctuation">-</span>charts
+    <span class="token key atrule">targetRevision</span><span class="token punctuation">:</span> HEAD
+  <span class="token key atrule">syncPolicy</span><span class="token punctuation">:</span>
+    <span class="token key atrule">automated</span><span class="token punctuation">:</span>
+      <span class="token key atrule">prune</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+      <span class="token key atrule">selfHeal</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+    <span class="token key atrule">syncOptions</span><span class="token punctuation">:</span>
+    <span class="token punctuation">-</span> Validate=false
+    <span class="token punctuation">-</span> CreateNamespace=true
+<span class="token key atrule">status</span><span class="token punctuation">:</span>
+  <span class="token punctuation">...</span></code></pre></div><p>이 Application 리소스에서 주요한 부분은 <code class="language-text">spec</code> 내 다음 세 부분이다.</p><ul><li><code class="language-text">source</code> <ul><li>배포할 소스를 지정한다.</li><li>Github Repository 주소와 경로 또는 Helm Repository 주소가 들어간다.</li></ul></li><li><code class="language-text">destination</code><ul><li>배포할 환경을 지정한다.</li><li>이 Argo CD는 클러스터 내에 배포되어있으므로, <code class="language-text">https://kubernetes.default.svc</code> 로 배포한다는 것은, Argo CD가 배포된 이 클러스터에 배포하겠다는 의미다.</li></ul></li><li><code class="language-text">syncPolicy</code><ul><li>배포 이후 Sync에 사용할 옵션에 대해 지정한다.</li></ul></li></ul><p>이 값들은 우리가 Web UI에서 App을 생성할 때 입력해준 값들이다.</p><p>정리해보면, 우리가 Web UI에서 배포한 리소스는 이 Application 리소스다.
+Web UI를 통해 Application 리소스 생성에 필요한 값들을 입력받고, 이를 기반으로 Application 리소스를 만들어 배포하게 된다.
+그리고 이 Application 리소스는 Application Controller에 의해 Soruce Repo를 기반으로 Kubernetes 리소스들을 배포하게 된다.</p><p>이 Application 리소스만 잘 작성한 뒤 클러스터에 배포해도 Argo CD Web UI에서 App을 배포한 것과 것과 동일한 효과를 가지며,
+Web UI에서도 볼 수 있다.</p><h2 id="applications-in-argo-cd-helm-chart" style="position:relative"><a href="#applications-in-argo-cd-helm-chart" aria-label="applications in argo cd helm chart permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Applications in Argo CD Helm Chart</h2><p>이제 App을 배포한다는 것은 곧 Application 리소스를 배포한다는 것임을 알았다.</p><p>그럼 어떻게 하면 이 Application을 GitOps 스타일로 배포 할 수 있을까?
+어떻게 하면 현재 클러스터에 배포된 Application들을 Github Repository에 Single Soruce of Truth로 담을 수 있을까?</p><p>일단 첫 번째로 생각할 수 있는 방법은 Argo CD Helm Chart 내에 Application을 추가하는 것이다.
+Chart 내 <code class="language-text">values.yaml</code> 을 살펴보면 다음처럼 <code class="language-text">server.additionalApplications</code> 항목이 있다.
+바로 이 부분에 Argo CD를 배포하면서 같이 배포할 Application들을 추가하면 된다.
+(주석으로 어떻게 추가하는지 안내가 되어있다.)</p><div class="gatsby-highlight" data-language="yaml"><pre class="language-yaml"><code class="language-yaml"><span class="token comment"># argo-cd/values.yaml</span>
+
+<span class="token key atrule">additionalApplications</span><span class="token punctuation">:</span>
+<span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> nginx
+  <span class="token key atrule">additionalLabels</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+  <span class="token key atrule">additionalAnnotations</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+  <span class="token key atrule">finalizers</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> resources<span class="token punctuation">-</span>finalizer.argocd.argoproj.io
+  <span class="token key atrule">project</span><span class="token punctuation">:</span> default
+  <span class="token key atrule">source</span><span class="token punctuation">:</span>
+    <span class="token key atrule">repoURL</span><span class="token punctuation">:</span> https<span class="token punctuation">:</span>//github.com/heumsi/helm<span class="token punctuation">-</span>charts
+    <span class="token key atrule">targetRevision</span><span class="token punctuation">:</span> HEAD
+    <span class="token key atrule">path</span><span class="token punctuation">:</span> nginx
+  <span class="token key atrule">destination</span><span class="token punctuation">:</span>
+    <span class="token key atrule">server</span><span class="token punctuation">:</span> https<span class="token punctuation">:</span>//kubernetes.default.svc
+    <span class="token key atrule">namespace</span><span class="token punctuation">:</span> nginx
+  <span class="token key atrule">syncPolicy</span><span class="token punctuation">:</span>
+    <span class="token key atrule">automated</span><span class="token punctuation">:</span>
+      <span class="token key atrule">prune</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+      <span class="token key atrule">selfHeal</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+    <span class="token key atrule">syncOptions</span><span class="token punctuation">:</span>
+    <span class="token punctuation">-</span> Validate=false
+    <span class="token punctuation">-</span> CreateNamespace=true</code></pre></div><p>또한 <code class="language-text">source.repoURL</code> 의 값인 <code class="language-text">https://github.com/heumsi/helm-charts</code> 에 접근하기 위해 다음처럼 Credentials 정보도 추가해줘야 한다.
+<code class="language-text">values.yaml</code> 를 살펴보면 <code class="language-text">config.credentialTemplates</code> 항목이 있다. 이 부분에 다음처럼 Credentials 정보를 추가하자.</p><div class="gatsby-highlight" data-language="yaml"><pre class="language-yaml"><code class="language-yaml"><span class="token comment"># argo-cd/values.yaml</span>
+
+<span class="token key atrule">credentialTemplates</span><span class="token punctuation">:</span> 
+  <span class="token key atrule">https-creds</span><span class="token punctuation">:</span>
+    <span class="token key atrule">url</span><span class="token punctuation">:</span> https<span class="token punctuation">:</span>//github.com/heumsi
+    <span class="token key atrule">password</span><span class="token punctuation">:</span> ghp_xxxx  <span class="token comment"># Github access token 값을 넣어주면 된다.</span>
+    <span class="token key atrule">username</span><span class="token punctuation">:</span> heumsi</code></pre></div><p>이제 Chart를 다시 배포하면 Argo CD와 더불어 위에서 추가한 Application 리소스도 같이 생성된다.</p><div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ kubectl get apps -n argocd   
+            
+NAME    SYNC STATUS   HEALTH STATUS
+nginx   Synced        Healthy</code></pre></div><p>이제 이 Argo CD Helm Chart는 클러스터 내 Application 배포 상태 정보까지 포함하게 되었다.
+새로운 Kubernetes 클러스터를 만든 뒤 이전 클러스터 내 App들을 옮겨가야할 때, 그저 이 Argo CD Helm Chart만 배포하면 되는 것이다!</p><h2 id="app-of-apps-패턴" style="position:relative"><a href="#app-of-apps-%ED%8C%A8%ED%84%B4" aria-label="app of apps 패턴 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>App of Apps 패턴</h2><p>그런데 위처럼 배포할 경우 또 찜찜한게 몇가지 있는데 바로 다음의 것들이다.</p><ul><li>클러스터 내에 Application을 추가할 때 마다 그럼 <code class="language-text">values.yaml</code> 을 수정해야 하나? 배포하는 Application이 한두개가 아닐거고, 그럼 안그래도 비대한 <code class="language-text">values.yaml</code> 이 더 엄청 비대해질텐데?</li><li>그리고 실제로 Argo CD 배포 자체는 <code class="language-text">helm</code> 으로하고 있지 않나? 그럼 Application 을 리소스를 추가할 때마다 <code class="language-text">helm upgrade</code> 명령어를 쳐야하나?
+이 클러스터 내 App 배포 상태가 <code class="language-text">values.yaml</code> 에 남는 건 맞기는 한데, 하지만 배포 방식에서 여전히 커맨드 라인 명령어를 치고있잖아?</li></ul><p>특히 전자의 찜찜함을 풀 수 있는 방법이 바로 App of Apps 패턴을 이용하여 배포하는 것이다.</p><p>App of Apps는 이름 그대로 Application 안에 Application들을 담는 방법이다.
+Application은 사실 그냥 yaml 파일로 직접 작성한 후 배포해도 전혀 문제가 없다고 했다.
+그러면 배포하고자 하는 Helm Chart의 templates 안에 Application 리소스들을 가지고 있다면 어떻게 될까?
+일반적인 Helm Chart 배포와 마찬가지로 Chart를 배포하면 templates 내 Application들이 모두 같은 Chart로 엮여 배포된다.</p><p>한번 실습해보자.
+먼저 별도의 <code class="language-text">argocd-apps</code> 라는 별도의 Github Repository를 만든다.
+이 Repository에 Kubernetes 클러스터에 배포할 Helm Chart(Application 들을 담은)를 다음과 같이 담을 예정이다.</p><div class="gatsby-highlight" data-language="yaml"><pre class="language-yaml"><code class="language-yaml">.
+├── Chart.yaml
+├── templates
+│   ├── argocd.yaml
+│   ├── nginx.yaml
+└── values.yaml</code></pre></div><p><code class="language-text">Chart.yaml</code> 를 다음처럼 작성한다.</p><div class="gatsby-highlight" data-language="yaml"><pre class="language-yaml"><code class="language-yaml"><span class="token comment"># Chart.yaml</span>
+
+<span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> v2
+<span class="token key atrule">name</span><span class="token punctuation">:</span> applications
+<span class="token key atrule">description</span><span class="token punctuation">:</span> root app for app of apps pattern.
+<span class="token key atrule">type</span><span class="token punctuation">:</span> application
+<span class="token key atrule">version</span><span class="token punctuation">:</span> 0.1.0
+<span class="token key atrule">appVersion</span><span class="token punctuation">:</span> <span class="token string">&quot;1.16.0&quot;</span></code></pre></div><p><code class="language-text">version</code> 이나 <code class="language-text">appVersion</code> 은 여기서는 의미없다. 굳이 의미를 부여한다면, 클러스터의 App 배포 상태에 대한 버전 정도라 볼 수 있을 듯 하다.
+(다만 이럴 경우, 이 Chart 내 수정이 일어날 때마다 매번 버전도 같이 수정해줘야 의미가 있다. 이런건 자동화 하는게 좋겠으나, 일단 이 글에서는 별 의미를 두지 않고 넘어간다.)</p><p><code class="language-text">templates</code> 폴더를 만들고, 이 안에 이제 Application 리소스를 추가하자.</p><p>먼저 <code class="language-text">templates/nginx.yaml</code> 를 만들어 다음처럼 작성한다.</p><div class="gatsby-highlight" data-language="yaml"><pre class="language-yaml"><code class="language-yaml"><span class="token comment"># templates/nginx.yaml</span>
+
+<span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> argoproj.io/v1alpha1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> Application
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> nginx
+  <span class="token key atrule">namespace</span><span class="token punctuation">:</span> argocd
+  <span class="token key atrule">finalizers</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> resources<span class="token punctuation">-</span>finalizer.argocd.argoproj.io
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token comment"># The project the application belongs to.</span>
+  <span class="token key atrule">project</span><span class="token punctuation">:</span> default
+  
+  <span class="token comment"># Source of the application manifests</span>
+  <span class="token key atrule">source</span><span class="token punctuation">:</span>
+    <span class="token key atrule">repoURL</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">{</span> .Values.spec.source.repoURL <span class="token punctuation">}</span><span class="token punctuation">}</span>
+    <span class="token key atrule">targetRevision</span><span class="token punctuation">:</span> HEAD
+    <span class="token key atrule">path</span><span class="token punctuation">:</span> nginx
+
+  <span class="token comment"># Destination cluster and namespace to deploy the application</span>
+  <span class="token key atrule">destination</span><span class="token punctuation">:</span>
+    <span class="token key atrule">server</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">{</span> .Values.spec.destination.server <span class="token punctuation">}</span><span class="token punctuation">}</span>
+    <span class="token key atrule">namespace</span><span class="token punctuation">:</span> nginx
+  
+  <span class="token comment"># Sync policy</span>
+  <span class="token key atrule">syncPolicy</span><span class="token punctuation">:</span>
+    <span class="token punctuation">{</span><span class="token punctuation">{</span><span class="token punctuation">-</span> .Values.spec.syncPolicy <span class="token punctuation">|</span> toYaml <span class="token punctuation">|</span> nindent 4 <span class="token punctuation">}</span><span class="token punctuation">}</span></code></pre></div><p>우리가 이전에 작성한 Application 별반 다르지 않다.
+다만 Helm의 Template 문법을 이용하여 재사용할 값들은 따로 빼두었다.</p><p>이제 재사용할 값들을 <code class="language-text">values.yaml</code> 를 만들어 작성하자.
+이 Chart내에 있는 모든 Application들은 특별한 예외가 있지 않은 이상, 이 <code class="language-text">values.yaml</code> 값들을 가져다 사용하자고 약속하자.
+(이는 일종의 운영 정책인 셈이다.)</p><div class="gatsby-highlight" data-language="yaml"><pre class="language-yaml"><code class="language-yaml"><span class="token comment"># values.yaml</span>
+
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token key atrule">destination</span><span class="token punctuation">:</span>
+    <span class="token key atrule">server</span><span class="token punctuation">:</span> https<span class="token punctuation">:</span>//kubernetes.default.svc
+  <span class="token key atrule">source</span><span class="token punctuation">:</span>
+    <span class="token key atrule">repoURL</span><span class="token punctuation">:</span> https<span class="token punctuation">:</span>//github.com/heumsi/helm<span class="token punctuation">-</span>charts
+  <span class="token key atrule">syncPolicy</span><span class="token punctuation">:</span>
+    <span class="token key atrule">automated</span><span class="token punctuation">:</span>
+      <span class="token key atrule">prune</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+      <span class="token key atrule">selfHeal</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+    <span class="token key atrule">syncOptions</span><span class="token punctuation">:</span>
+    <span class="token punctuation">-</span> Validate=false
+    <span class="token punctuation">-</span> CreateNamespace=true</code></pre></div><p>이제 위에서 작성한 Helm Chart를 Argo CD Helm Chart의 <code class="language-text">values.yaml</code> 내 <code class="language-text">additionalApplications</code> 에 다음처럼 추가하자.</p><div class="gatsby-highlight" data-language="yaml"><pre class="language-yaml"><code class="language-yaml"><span class="token comment"># argo-cd/values.yaml</span>
+
+<span class="token key atrule">additionalApplications</span><span class="token punctuation">:</span> 
+<span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> applications
+  <span class="token key atrule">additionalLabels</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+  <span class="token key atrule">additionalAnnotations</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+  <span class="token key atrule">finalizers</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> resources<span class="token punctuation">-</span>finalizer.argocd.argoproj.io
+  <span class="token key atrule">project</span><span class="token punctuation">:</span> default
+  <span class="token key atrule">source</span><span class="token punctuation">:</span>
+    <span class="token key atrule">repoURL</span><span class="token punctuation">:</span> https<span class="token punctuation">:</span>//github.com/heumsi/argocd<span class="token punctuation">-</span>apps
+    <span class="token key atrule">targetRevision</span><span class="token punctuation">:</span> HEAD
+    <span class="token key atrule">path</span><span class="token punctuation">:</span> .
+  <span class="token key atrule">destination</span><span class="token punctuation">:</span>
+    <span class="token key atrule">server</span><span class="token punctuation">:</span> https<span class="token punctuation">:</span>//kubernetes.default.svc
+  <span class="token key atrule">syncPolicy</span><span class="token punctuation">:</span>
+    <span class="token key atrule">automated</span><span class="token punctuation">:</span>
+      <span class="token key atrule">prune</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+      <span class="token key atrule">selfHeal</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+    <span class="token key atrule">syncOptions</span><span class="token punctuation">:</span>
+    <span class="token punctuation">-</span> Validate=false
+    <span class="token punctuation">-</span> CreateNamespace=true</code></pre></div><p>이름은 <code class="language-text">applications</code> 라 하였다.
+이 Application은 Chart 내 다른 Application들을 품고있기 때문에, Root Application이라 부를 수 있을거 같다. </p><p>이제 Argo CD Helm Chart를 다시 배포하자.
+그러면 다음처럼 Root Application인 <code class="language-text">applications</code> 도, 그리고 그 안에 속한 <code class="language-text">nginx</code> 도 잘 배포된 것을 확인할 수 있다.</p><div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ kubectl get apps
+
+NAME           SYNC STATUS   HEALTH STATUS
+applications   Synced        Healthy
+nginx          Synced        Healthy</code></pre></div><p><span class="gatsby-resp-image-wrapper" style="position:relative;display:block;margin-left:auto;margin-right:auto;max-width:590px">
+      <span class="gatsby-resp-image-background-image" style="padding-bottom:63.51351351351351%;position:relative;bottom:0;left:0;background-image:url(&#x27;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAACR0lEQVQ4y5WRXWvTUBjHz5WoDAYKMvwATr+V4KboZRVULN6LDrc2adrVdhsiXog6Ef0CG15tqOvQbl2XNmtemualyUmarUnOX5KueuFueuAHz3nOeX485zlkaupcdubKpezVmcvZixfOZwkhk/KEEPKUEHKfEDJN5m/dRLlUQrlUREEQkMvlIQhCSrFYBM/zp7EAnuPA86dwHIqCkJ4vcTyevVzA7fm5GyTPFVhd0oY/9lrDWkMK9yUtPGEIgxghA0KTBmEQIQTOJgZOXICZwdD8uP7pGlnMc4hZzEzHZQ1Vg27aMPoOHOrDpT6aWheybsDsu7AcmuYlzcAvUUa9raDeUuI9ScPPfdFZKizPkurKKk6ikLm+zxqahuD4GLbrwg8CxFGEjm3D8T30KYU/GCCKIliuh4NOF6LSw6HSi1uqgbrYcbjlyiwpv6ogYozZ1GN1RYVhWug7FNTzkawj24Lc1WHbzijHGGzqo9HpJjI0ZT0WVQO/D49GwuJyORkE8wYDVhMlbG7t4Nv3XWxs7cDou2iqOja2a9jcqmFzu4aO1oNmOWmHZwqTDl3PY9TzWVsz0e5aKVLXGhXJvTQe05R1HHT0sex/4eraGpJ3uP6AJZcSyenFUZGi/92Pc2PZmR2+fvM2GVVMU6HOmvLE/BOWKrPk3fsPiBhC1xtEompEh0pvUsKWZia/bPNJh5+/fMUwitF3KRpHKvalyUnGtNtoDXNC+Tp5+OhxprqymqlUq5mFHJd5sTQ5Czn+wfPF/L25O3en/wBUWDbMHwUnSgAAAABJRU5ErkJggg==&#x27;);background-size:cover;display:block"></span>
+  <img class="gatsby-resp-image-image" alt="4.png" title="4.png" src="/blog/static/46c9627904f53509de182a5ebb69eeba/fcda8/4.png" srcSet="/blog/static/46c9627904f53509de182a5ebb69eeba/12f09/4.png 148w,/blog/static/46c9627904f53509de182a5ebb69eeba/e4a3f/4.png 295w,/blog/static/46c9627904f53509de182a5ebb69eeba/fcda8/4.png 590w,/blog/static/46c9627904f53509de182a5ebb69eeba/efc66/4.png 885w,/blog/static/46c9627904f53509de182a5ebb69eeba/c83ae/4.png 1180w,/blog/static/46c9627904f53509de182a5ebb69eeba/fa60d/4.png 1792w" sizes="(max-width: 590px) 100vw, 590px" style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0" loading="lazy" decoding="async"/>
+    </span></p><p><code class="language-text">applications</code> 을 클릭하면 다음처럼 <code class="language-text">nginx</code> 가 <code class="language-text">applications</code> 의 자식 리소스로 포함되어 있는 것도 볼 수 있다.</p><p><span class="gatsby-resp-image-wrapper" style="position:relative;display:block;margin-left:auto;margin-right:auto;max-width:590px">
+      <span class="gatsby-resp-image-background-image" style="padding-bottom:63.51351351351351%;position:relative;bottom:0;left:0;background-image:url(&#x27;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAACFElEQVQ4y52Ry2sTURTG70ZEKRREBHVv9M8SIqLLVEQwuHRh0mTy6ORl0qrVjRZEN+pf4UJabdKZkMlkMq/OTOaVzHTmkzs1kWC7iIsf99x7P77zcQ5ZW7uQvXHtSvbm9avZy5cuZgkhq/KUEPKMELJBCFkn99J3UavV0aixqDcaKBQZMEwpoVAoIpfPJxSLRVQqlSVYlkWBKSHHlPB8M490On2H1JvNuDdSA8VygpFqhP2REh6KSngwEMN9XgglzQh/CVJoTYMQwFnMAMQRoH/7+uUWKbMsIiCWdD22HQeW7UA6NqFMLKgTC4ZpYahoMGwHnj+F43pwPA+u5yd4/jSaBQEM07Te7L5NkXZnB0GEWDftWJB1CLIGTpTREyhj8CMVfWmOhoGsJ9B3jiIqES9pOOAFa6vZTpFWuwMa2Xa9mBMV9EQFVLDPi/je7UOfOFBNG7ykYqDoMGwXY93EkajMOTXkBKvaaKdIo/UyMTRtJ6ZdqYga0+5USO/doYzeUF6YdIXTmjvVLxJWacL29nYyQ9fz/xr+Oef1efyTkBp2dl5hGs5iy3Zj7hzDRX3237Lh6913mEZxZDsuTRgficqqLM/w/Yc9+K4bup5/0h9rJ9xIXZWwP9bxkx8ayZY/fvqM44kNWTfQFSQcDlaHLuxHtx+Ua63bZOPxkwzDNjMvmEomX6r+F5vlrUc5pvIwff/B+m89hDUydsRQgQAAAABJRU5ErkJggg==&#x27;);background-size:cover;display:block"></span>
+  <img class="gatsby-resp-image-image" alt="5.png" title="5.png" src="/blog/static/f7ebd51584f9d5d65c257bff4d9f7a72/fcda8/5.png" srcSet="/blog/static/f7ebd51584f9d5d65c257bff4d9f7a72/12f09/5.png 148w,/blog/static/f7ebd51584f9d5d65c257bff4d9f7a72/e4a3f/5.png 295w,/blog/static/f7ebd51584f9d5d65c257bff4d9f7a72/fcda8/5.png 590w,/blog/static/f7ebd51584f9d5d65c257bff4d9f7a72/efc66/5.png 885w,/blog/static/f7ebd51584f9d5d65c257bff4d9f7a72/c83ae/5.png 1180w,/blog/static/f7ebd51584f9d5d65c257bff4d9f7a72/fa60d/5.png 1792w" sizes="(max-width: 590px) 100vw, 590px" style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0" loading="lazy" decoding="async"/>
+    </span></p><p>만약 클러스터 내에 App을 또 배포하고싶으면 어떻게 하면 될까?
+이제는 그저 <code class="language-text">argocd-apps/templates</code> 내에 Application를 추가하면 된다.</p><p>예를 들어 Wordpress를 추가로 배포하고싶다고 해보자.
+그러면 <code class="language-text">argocd-apps</code> Github Repository에 Application를 추가하면 된다.
+(이 과정은 branch에 바로 push하는 형태일 수도 있고, PR &amp; Merge 방식일 수도 있다. 후자의 경우, 다른 팀원들에게 배포에 대해 리뷰받을 수 있는 구조가 된다.)</p><div class="gatsby-highlight" data-language="yaml"><pre class="language-yaml"><code class="language-yaml"><span class="token comment"># templates/wordpress.yaml</span>
+
+<span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> argoproj.io/v1alpha1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> Application
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> wordpress
+  <span class="token key atrule">namespace</span><span class="token punctuation">:</span> argocd
+  <span class="token key atrule">finalizers</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> resources<span class="token punctuation">-</span>finalizer.argocd.argoproj.io
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token comment"># The project the application belongs to.</span>
+  <span class="token key atrule">project</span><span class="token punctuation">:</span> default
+  
+  <span class="token comment"># Source of the application manifests</span>
+  <span class="token key atrule">source</span><span class="token punctuation">:</span>
+    <span class="token key atrule">repoURL</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">{</span> .Values.spec.source.repoURL <span class="token punctuation">}</span><span class="token punctuation">}</span>
+    <span class="token key atrule">targetRevision</span><span class="token punctuation">:</span> HEAD
+    <span class="token key atrule">path</span><span class="token punctuation">:</span> wordpress
+
+  <span class="token comment"># Destination cluster and namespace to deploy the application</span>
+  <span class="token key atrule">destination</span><span class="token punctuation">:</span>
+    <span class="token key atrule">server</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">{</span> .Values.spec.destination.server <span class="token punctuation">}</span><span class="token punctuation">}</span>
+    <span class="token key atrule">namespace</span><span class="token punctuation">:</span> wordpress
+  
+  <span class="token comment"># Sync policy</span>
+  <span class="token key atrule">syncPolicy</span><span class="token punctuation">:</span>
+    <span class="token punctuation">{</span><span class="token punctuation">{</span><span class="token punctuation">-</span> .Values.spec.syncPolicy <span class="token punctuation">|</span> toYaml <span class="token punctuation">|</span> nindent 4 <span class="token punctuation">}</span><span class="token punctuation">}</span></code></pre></div><p>Argo CD에서는 곧 새로 추가된 Application를 인지하여 Sync하게 되고, 다음처럼 Application를 조회하면 추가된 <code class="language-text">wordpress</code> 을 확인할 수 있다.</p><div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ kubectl get apps
+
+NAME           SYNC STATUS   HEALTH STATUS
+applications   Synced        Healthy
+nginx          Synced        Healthy
+wordpress      Synced        Progressing</code></pre></div><p><span class="gatsby-resp-image-wrapper" style="position:relative;display:block;margin-left:auto;margin-right:auto;max-width:590px">
+      <span class="gatsby-resp-image-background-image" style="padding-bottom:63.51351351351351%;position:relative;bottom:0;left:0;background-image:url(&#x27;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAACIElEQVQ4y52RS4vTUBiGz0ZEGRgQEdS9oz9LqMhsOyKCxaUL22nTy6Q32xl1dKOC6Eb9F4JU6SXJTJpLc2mT5tYmk7yStGo7uKmLB75zeM/Dy3fI1taFzI1rVzI3r1/NXL50MUMI2ZTHhJAnhJA9Qsg2uZe6i2q1hnqVRq1eR75AgaKKCfl8AdlcDtlsDoVCAeVyeQ2appGnishSRTzdzyGVSt0htUYj6ouqr5i2L6qTgBOVoCsoQedUCDocH8iaEfR4ORi78wDAv5gDiEJA//rl8y1SommEQCTpemTZNkzLhjQ2oExNyMYEhjmFpGhQDBOuN4PturBdD84S15uFc9/HxDDMV8evd0irfQQ/RKQbVsSPdPAjDcxwBEZQwYkqerycwIoKWEkDJ2s4kXWwogomRlDC+P4Hy5sHjdYOabbaiCtbjhsxgoK+sHjYYQV863HQpzY0w8KJrEHSx/DmPsZTO5ENBCVmIWR4s1Jv7ZB683kiNCw7YpehONwfjtDl5UTELs+srEIem+Ckv7nBSsNK3LB1eJjs0HG9FeEivNLizxyLV89rDWNh++gFZoEfmZYTMaJ6Prwm/j2fy60LXx6/wSyMQst24obRQFA2ZX2Hb9+9h+c4geN6Z5ysnTGiuikBJ+v4yQ4nyS9/+PgJ46mFkT5Bj5fQPd2ceK/fe5xfqjZvk72Hj9IU3Ug/o8rpXLHyX+yXDh5kqfJu6v7u9i+z5TVwzMSktAAAAABJRU5ErkJggg==&#x27;);background-size:cover;display:block"></span>
+  <img class="gatsby-resp-image-image" alt="6.png" title="6.png" src="/blog/static/f2ff75306f09dadcd29be9e48c12fcb1/fcda8/6.png" srcSet="/blog/static/f2ff75306f09dadcd29be9e48c12fcb1/12f09/6.png 148w,/blog/static/f2ff75306f09dadcd29be9e48c12fcb1/e4a3f/6.png 295w,/blog/static/f2ff75306f09dadcd29be9e48c12fcb1/fcda8/6.png 590w,/blog/static/f2ff75306f09dadcd29be9e48c12fcb1/efc66/6.png 885w,/blog/static/f2ff75306f09dadcd29be9e48c12fcb1/c83ae/6.png 1180w,/blog/static/f2ff75306f09dadcd29be9e48c12fcb1/fa60d/6.png 1792w" sizes="(max-width: 590px) 100vw, 590px" style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0" loading="lazy" decoding="async"/>
+    </span></p><blockquote><p>이미 배포되어 있는 Argo CD에 대해서도 Application을 추가하여 연동할 수 있다.
+배포하는 방법은 위와 똑같고, 배포하면 다음처럼 application 으로 리소스가 잡힌다.</p><div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ kubectl get apps            
+
+NAME           SYNC STATUS   HEALTH STATUS
+applications   Synced        Healthy
+argocd         Synced        Healthy
+nginx          Synced        Healthy
+wordpress      Synced        Healthy</code></pre></div><p>이렇게 Argo CD 역시 Application으로 연동해두면, Argo CD Helm chart 내 변경 사항이 있을 때 마다 helm 커맨드 라인 명령어를 치지 않아도 된다.
+이는 위에서 언급한 두 번째 찜찜함을 해결해준다.</p><p>다만 이럴 경우 나중에 Argo CD 자체를 삭제할 때 순서가 꼬일 수 있음에 유의하자.
+<code class="language-text">kubectl delete apps argocd</code> 로 Application을 삭제하면, 클러스터 내 배포된 Argo CD가 모두 내려가게 된다.
+이 결과로, 다른 application의 삭제를 처리해줄 Application Controller도 사라지기 때문에 남은 Applicaiton 들은 finalizer를 수정하며 일일이 직접 삭제해줘야 한다.</p></blockquote><p>이런 식으로 Application 추가가 곧 새로운 App에 대한 배포가 되고, 이런 과정은 모두 GitOps 형태로 동작한다.</p><p>이를 좀 더 잘 활용하면 멀티 클러스터 환경에서 클러스터 단위로 Application 들을 묶을 수도 있다.
+루트 Appliation을 클러스터 단위로 두는 것이다.</p><p>예를 들어 클러스터 A, B, C, D가 있다고하자. 그러면 <code class="language-text">argocd-apps</code> Repository를 다음처럼 구성할 수 있다.</p><div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">.
+├──cluster_a
+│   ├──Chart.yaml
+│   └──templates
+│       └── nginx.yaml
+├──cluster_b
+│   ├──Chart.yaml
+│   └──templates
+│       └── nginx.yaml
+├──cluster_c
+│   ├──Chart.yaml
+│   └──templates
+│       └── nginx.yaml
+└──cluster_d
+    ├──Chart.yaml
+    └──templates
+        └── nginx.yaml</code></pre></div><p>만약 멀티 클러스터 환경에서 Argo CD를 클러스터 외부에서 배포했다면, Argo CD Helm Chart 내 <code class="language-text">values.yaml</code> 에 <code class="language-text">additionalAppplications</code> 항목에
+클러스터 개수 만큼 Root Application을 추가해주면 된다.
+이 Root Application들의 Source Repository의 Path는 위 <code class="language-text">argocd-apps</code> Repository에서의 cluster 경로가 되겠다.</p><p>반면 클러스터 별로 각각 Argo CD가 배포되어 있다면, <code class="language-text">values.yaml</code> 을 <code class="language-text">values.cluster_a.yaml</code>, <code class="language-text">values.cluster_b.yaml</code> 이런 식으로
+클러스터 별로 <code class="language-text">values.yaml</code> 을 만든 뒤 각 파일에서 <code class="language-text">additionalAppplications</code> 에 Root Application을 하나만 두면 된다.</p><p>꼭 클러스터가 아니더라도, Root Applcation의 기준을 무엇으로 두느냐에 따라 다양하게 Application들을 묶을 수 있다.</p><h2 id="applicationset" style="position:relative"><a href="#applicationset" aria-label="applicationset permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>ApplicationSet</h2><p>App of Apps는 사용 패턴이다.
+이 말인 즉슨, Argo CD 사용자들이 Application 이라고 하는 리소스를 가지고,
+배포를 좀 더 쉽게할 수 있는 방법을 찾다보니 사용자들에 의해 나오게 된 방법론이라는 것이다.</p><p>반면 ApplicationSet은 Argo CD 리소스다.
+App of Apps 패턴을 보고 Argo CD 개발팀이 영감을 받아 추가적으로 개발한 결과물이다.
+Argo CD v2.3 버전 이전에는 별도의 Plugin으로 존재하다가, v2.3부터 Argo CD Helm Chart에 합류되었다.</p><p>App of Apps 패턴을 이해했다면, ApplicationSet에 대한 이해도 별로 어렵지 않다.
+다음은 ApplicationSet의 사용 예시다.</p><div class="gatsby-highlight" data-language="yaml"><pre class="language-yaml"><code class="language-yaml"><span class="token comment"># applicationset.yaml</span>
+
+<span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> argoproj.io/v1alpha1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> ApplicationSet
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> applicationset
+  <span class="token key atrule">namespace</span><span class="token punctuation">:</span> argocd
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token key atrule">generators</span><span class="token punctuation">:</span>
+    <span class="token punctuation">-</span> <span class="token key atrule">git</span><span class="token punctuation">:</span>
+        <span class="token key atrule">repoURL</span><span class="token punctuation">:</span> https<span class="token punctuation">:</span>//github.com/heumsi/helm<span class="token punctuation">-</span>charts
+        <span class="token key atrule">revision</span><span class="token punctuation">:</span> main
+        <span class="token key atrule">directories</span><span class="token punctuation">:</span>
+          <span class="token punctuation">-</span> <span class="token key atrule">path</span><span class="token punctuation">:</span> <span class="token string">&quot;*&quot;</span>
+  <span class="token key atrule">template</span><span class="token punctuation">:</span>
+    <span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+      <span class="token key atrule">name</span><span class="token punctuation">:</span> <span class="token string">&#x27;{{path.basename}}&#x27;</span>
+    <span class="token key atrule">spec</span><span class="token punctuation">:</span>
+      <span class="token key atrule">project</span><span class="token punctuation">:</span> default
+      <span class="token key atrule">syncPolicy</span><span class="token punctuation">:</span>
+        <span class="token key atrule">automated</span><span class="token punctuation">:</span>
+          <span class="token key atrule">prune</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+          <span class="token key atrule">selfHeal</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+        <span class="token key atrule">syncOptions</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> Validate=false
+        <span class="token punctuation">-</span> CreateNamespace=true
+      <span class="token key atrule">source</span><span class="token punctuation">:</span>
+        <span class="token key atrule">repoURL</span><span class="token punctuation">:</span> https<span class="token punctuation">:</span>//github.com/heumsi/helm<span class="token punctuation">-</span>charts
+        <span class="token key atrule">targetRevision</span><span class="token punctuation">:</span> main
+        <span class="token key atrule">path</span><span class="token punctuation">:</span> <span class="token string">&#x27;{{path}}&#x27;</span>
+      <span class="token key atrule">destination</span><span class="token punctuation">:</span>
+        <span class="token key atrule">server</span><span class="token punctuation">:</span> https<span class="token punctuation">:</span>//kubernetes.default.svc
+        <span class="token key atrule">namespace</span><span class="token punctuation">:</span> <span class="token string">&#x27;{{path}}&#x27;</span></code></pre></div><p>간략히 설명하자면, <code class="language-text">https://github.com/heumsi/helm-charts</code> Repository의 <code class="language-text">main</code> 브랜치에 있는 모든 파일들에 대해 Application 리소스를 생성한다는 의미다.</p><p>ApplicationSet의 spec은 다음처럼 크게 2가지로 나뉜다.</p><ul><li><code class="language-text">generators</code><ul><li>Application 리소스를 어떤 방법으로 생성할지에 대해 결정한다.</li><li>여기에는 다음과 같은 다양한 방법들이 있다.<ul><li>List generator</li><li>Cluster generator</li><li>Git generator</li><li>등등 더 자세한건 <a href="https://argocd-applicationset.readthedocs.io/en/stable/Generators/">공식 문서</a>를 확인하자.</li></ul></li></ul></li><li><code class="language-text">templates</code><ul><li>생성할 Application 리소스에 들어갈 내용이다.</li><li>실제로 내용을 보면 Application의 스펙과 동일하다.</li></ul></li></ul><p>쉽게 말해 ApplicationSet은 <code class="language-text">generators</code> 와 <code class="language-text">templates</code> 을 가지고 Application을 찍어내는 Application Factory라고 보면 된다.
+App of Apps 패턴에서 Root Application을 대신하는 역할을 하는 셈이다.
+따라서 별도의 <code class="language-text">argocd-apps</code> 와 같은 Repository에 Application을 추가하지 않고, 이 ApplicationSet 안에 추가할 Application spec이 담기도록 하면 된다.</p><p>이제 ApplicationSet을 배포해보자. 기존 클러스터를 먼저 깨끗하게 만든 뒤 위 yaml 파일을 배포한다.
+(나는 Argo CD Helm Chart를 내렸다가 다시 배포했다. 이 때 <code class="language-text">additionalApplications</code> 은 비어있게 하였다.)</p><div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ kubectl apply -f applicationset.yaml</code></pre></div><p>그러면 다음과 같이 생성된 Applicationset이 조회되고,</p><div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ kubectl get applicationset
+
+NAME             AGE
+applicationset   3s</code></pre></div><p>다음처럼 ApplicationSet에 의해 생성된 Application들이 조회된다.</p><div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ kubectl get apps      
+
+NAME        SYNC STATUS   HEALTH STATUS
+nginx       Synced        Healthy
+wordpress   OutOfSync     Progressing</code></pre></div><p><span class="gatsby-resp-image-wrapper" style="position:relative;display:block;margin-left:auto;margin-right:auto;max-width:590px">
+      <span class="gatsby-resp-image-background-image" style="padding-bottom:63.51351351351351%;position:relative;bottom:0;left:0;background-image:url(&#x27;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAACYUlEQVQ4y5WQzWsTYRDG35OoKAUFKf4BRv8roRbRYxSkGLxrLTYfm00ak7aIeBC/ED0LVgVpbTEGW9N8dLub7Ca7m333O9nd95Fs2nrxksOPmXlm5mEYcv7cqdTspQupy7MXU2fPnE4RQqblPiHkASHkDiFkhszPXUepWESpWECe55HJZMHzfEyhUADHcUc5Dy6XA8f9o8DzcT+d4/DwyRLm529cI9lcnu0K8mhnrz2q1oWgfigHPkPghQgYEGiWF+fA/wmBIQWY5o60N2/fXSHL2RwiFjGNWqzelaEbFAPTgmm7MQ1ZgdRToVMLhmXDclzUOyoOOgrUAYVh2pHlemhLMn2U5hKksrqGYRgw03FZXZbh+z5sz0MQBgADxIEO03Hg+B5GwfiosWaDWg784RCu70djTTcoXczyCVJ6WkbIGBtYNtvrdNFXNegDA6ZtHy3rkJTeRLNsgEWQDBeS0o9nDWpGYRSNI32YzidIYaWEIAJzXI9VWwI2Nn/i63YtjqphotHt4fNWFRubVWxsVSEqKgSV4suPGr5t1/Dp+07UFGV0+hpdzOQnF5q2zSzbYQeyhgNFjxEUHfuigqbUj/NjGlIv5mSup0ctWUOtIVCuVEmQtfV1ACz+YbPTj02Ol8Z1o9M7qY+1WD+q90UlanVV/G6JNFcsJ8iz5y/Gr4qs2LDHGtLUTAybhxPDl69eI2QITNsNW101bHb60xK0ZQ27LXHArZQT5P2HjxiFEQzTQv2wiz/C9Izf9KveHmX40lVyb2EhWVldS5YrleRSJpd8nJ6epQx3d3E5e3vu5q2ZvzNAONuq+R29AAAAAElFTkSuQmCC&#x27;);background-size:cover;display:block"></span>
+  <img class="gatsby-resp-image-image" alt="7.png" title="7.png" src="/blog/static/cda829e2210d42a0cd8f273b635d4e38/fcda8/7.png" srcSet="/blog/static/cda829e2210d42a0cd8f273b635d4e38/12f09/7.png 148w,/blog/static/cda829e2210d42a0cd8f273b635d4e38/e4a3f/7.png 295w,/blog/static/cda829e2210d42a0cd8f273b635d4e38/fcda8/7.png 590w,/blog/static/cda829e2210d42a0cd8f273b635d4e38/efc66/7.png 885w,/blog/static/cda829e2210d42a0cd8f273b635d4e38/c83ae/7.png 1180w,/blog/static/cda829e2210d42a0cd8f273b635d4e38/fa60d/7.png 1792w" sizes="(max-width: 590px) 100vw, 590px" style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0" loading="lazy" decoding="async"/>
+    </span></p><p>ApplicationSet을 이용하면 별도로 Root Application을 두지 않게된다.
+Root Application 대신 ApplicaitonSet이 이 Application들을 계속해서 제어하기 때문이다.</p><p>이제 Argo CD Helm Chart에 이 ApplicationSet을 추가해야 하는데,
+<code class="language-text">values.yaml</code> 안에 <code class="language-text">additionalApplications</code> 처럼 <code class="language-text">additionalApplicationSets</code> 이라는 항목은 보이지 않는다.
+따라서 Argo CD Helm Chart 내 <code class="language-text">templates/</code> 에 별도로 파일을 만들어 추가해야한다.</p><h2 id="어떤걸-써야할까" style="position:relative"><a href="#%EC%96%B4%EB%96%A4%EA%B1%B8-%EC%8D%A8%EC%95%BC%ED%95%A0%EA%B9%8C" aria-label="어떤걸 써야할까 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>어떤걸 써야할까?</h2><p>App of Apps 패턴과 ApplicationSet이 어떤 건지 알아보았다.
+그럼 둘 중 어떤걸 써야할까?</p><p>개인적인 생각으로는, 아직 Kubernetes를 도입한 초기 단계면 App of Apps 패턴부터 시작해보고,
+이후에 Kubernetes 운영이 좀 성숙해지면 그 때 ApplicationSet으로 바꾸는게 좋지 않을까 싶다.
+이렇게 생각한 이유는 다음과 같다.</p><ul><li>ApplicaitonSet 스펙은 App of Apps 패턴보다 추상화되어있다. 초기 클러스터 운영을 이제 막 시작한 때에는, 사실 앞으로 클러스터가 어떻게 더 확장되고,
+운영될지 잘 모른다. 특히 운영 패턴이 어느정도 정착하기 전에는 배포 방법이 자주 바뀔 수가 있는데, 이 때 ApplicationSet이라는 추상화된 리소스를 쓰는 것보다,
+좀 더 Raw한 App of Apps 패턴을 쓰는게 세부적으로 조정하기에 더 좋을 수 있다고 생각한다.</li><li>App of Apps 패턴이 ApplicationSet보다 조금 더 명시적이라고 생각한다. 따라서, 처음에는 ApplicationSet을 쓰는게 더 헷갈리고 복잡할 수도 있다.
+ApplicationSet의 Generator는 종류부터 다양하다. 그렇기 때문에, 초기에 어떤 Generator를 골라야할 지 잘 모를 수 있다.
+반면 App of Apps 패턴은 직접 Applicaiton을 작성해줘야 하기 때문에 작성에 손이 좀 더 갈 수 있어도, 명시적이고 고민해야할 선택지가 더 적다고 본다.</li><li>App of Apps 패턴을 사용하며 Application들을 일일이 작성해줘야 하기 힘들 때, ApplicationSet이 관리자 관점에서 더 편할 수 있다.
+꽤 많은 Application들이 클러스터에 자주 올라가고 내려오고, App of Apps 패턴보다 더 정교하게 규칙을 세우고 클러스터를 운영하고자 할 때 ApplicationSet이 활용하기 좋다고 생각한다.</li></ul><h2 id="나가며" style="position:relative"><a href="#%EB%82%98%EA%B0%80%EB%A9%B0" aria-label="나가며 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>나가며</h2><p>Argo CD에서 핵심이 되는 Application 리소스와 이를 좀 더 GitOps 스럽게 배포하는 전략인 App of Apps 패턴, 그리고 ApplicationSet 리소스에 대해서 알아보았다.
+Argo CD는 이미 Kubernetes 클러스터의 De Facto CD 툴로 자리잡았는데, 앞으로는 어떻게 발전해나갈지 개인적으로 참 궁금한 도구이기도 하다.
+많은 사람들이 좀 더 Argo CD와 GitOps 스타일에 익숙해지는데 이 글이 기여했으면 좋겠다.</p><blockquote><p>이 글에서 사용한 Github Repository는 다음에서 확인할 수 있다.</p><ul><li><a href="https://github.com/heumsi/helm-charts">heumsi/helm-charts</a></li><li><a href="https://github.com/heumsi/argocd-apps">heumsi/argocd-apps</a></li></ul></blockquote><h2 id="참고한-글" style="position:relative"><a href="#%EC%B0%B8%EA%B3%A0%ED%95%9C-%EA%B8%80" aria-label="참고한 글 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>참고한 글</h2><ul><li><a href="https://argo-cd.readthedocs.io/en/stable/">https://argo-cd.readthedocs.io/en/stable/</a></li><li><a href="https://itnext.io/level-up-your-argo-cd-game-with-applicationset-ccd874977c4c">https://itnext.io/level-up-your-argo-cd-game-with-applicationset-ccd874977c4c</a></li><li><a href="https://blog.argoproj.io/getting-started-with-applicationsets-9c961611bcf0">https://blog.argoproj.io/getting-started-with-applicationsets-9c961611bcf0</a></li></ul></div><div id="disqus_thread"></div></main><footer><ul class="external-links"><li><a href="https://www.facebook.com/heumsi/"><svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="facebook" class="svg-inline--fa fa-facebook " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.8 90.69 226.4 209.3 245V327.7h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.3 482.4 504 379.8 504 256z"></path></svg></a></li><li><a href="https://www.linkedin.com/in/siheum-jeon-04222a1b3/"><svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="linkedin" class="svg-inline--fa fa-linkedin " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"></path></svg></a></li><li><a href="https://github.com/heumsi/"><svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="github" class="svg-inline--fa fa-github " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3 .3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5 .3-6.2 2.3zm44.2-1.7c-2.9 .7-4.9 2.6-4.6 4.9 .3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3 .7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3 .3 2.9 2.3 3.9 1.6 1 3.6 .7 4.3-.7 .7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3 .7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3 .7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg></a></li><li><a href="https://bit.ly/3zAT8Ab"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="file-lines" class="svg-inline--fa fa-file-lines " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M256 0v128h128L256 0zM224 128L224 0H48C21.49 0 0 21.49 0 48v416C0 490.5 21.49 512 48 512h288c26.51 0 48-21.49 48-48V160h-127.1C238.3 160 224 145.7 224 128zM272 416h-160C103.2 416 96 408.8 96 400C96 391.2 103.2 384 112 384h160c8.836 0 16 7.162 16 16C288 408.8 280.8 416 272 416zM272 352h-160C103.2 352 96 344.8 96 336C96 327.2 103.2 320 112 320h160c8.836 0 16 7.162 16 16C288 344.8 280.8 352 272 352zM288 272C288 280.8 280.8 288 272 288h-160C103.2 288 96 280.8 96 272C96 263.2 103.2 256 112 256h160C280.8 256 288 263.2 288 272z"></path></svg></a></li></ul><p class="copy-right">@ heumsi</p></footer></div></div><div id="gatsby-announcer" style="position:absolute;top:0;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0" aria-live="assertive" aria-atomic="true"></div></div><script id="gatsby-script-loader">/*<![CDATA[*/window.pagePath="/posts/argocd-apps-deployment/";window.___webpackCompilationHash="9023d6fb65f6071942db";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"polyfill":["/polyfill-4aa291e7e6681714b3e8.js"],"app":["/app-c321c5efdf12999a1dd7.js"],"component---src-components-templates-log-js":["/component---src-components-templates-log-js-8be2b192cec9967ef4ea.js"],"component---src-components-templates-post-js":["/component---src-components-templates-post-js-d80014afc9ad124b5ee3.js"],"component---src-pages-404-js":["/component---src-pages-404-js-5ed0d86fb0763a04a4b4.js"],"component---src-pages-index-js":["/component---src-pages-index-js-67136b30be5717c21631.js"],"component---src-pages-logs-index-js":["/component---src-pages-logs-index-js-bf19e8f568991d11bb86.js"],"component---src-pages-posts-index-js":["/component---src-pages-posts-index-js-2779df3cf8aef25ec545.js"]};/*]]>*/</script><script src="/blog/polyfill-4aa291e7e6681714b3e8.js" nomodule=""></script><script src="/blog/app-c321c5efdf12999a1dd7.js" async=""></script><script src="/blog/framework-c9b92197cbae3c33e091.js" async=""></script><script src="/blog/webpack-runtime-d16735df36b4c0712223.js" async=""></script></body></html>
